@@ -28,7 +28,11 @@ export default function CreateTemplate() {
   ]);
   const [choosenQuestion, setChoosenQuestion] = useState(1);
 
-  useEffect(() => {});
+  const timesForAnswer = [5, 10, 20, 30, 40]
+
+  function saveTemplate(){
+    
+  }
   return (
     <main className="wrapper" style={{ display: "flex" }}>
       <div className="bar question-bar">
@@ -61,7 +65,17 @@ export default function CreateTemplate() {
         </button>
       </div>
       <QuestionTemplate question={questions[choosenQuestion - 1]} questionNumber={choosenQuestion} setQuestions={setQuestions}/>
-      <div className="bar right-bar"></div>
+      <div className="bar right-bar">
+        <button onClick={()=>{
+          saveTemplate()
+        }}>Save template</button>
+        <label>Time for answer</label>
+        <select>
+          {timesForAnswer.map((time)=>(
+            <option value={time}>{time} sec</option>
+          ))}
+        </select>
+      </div>
     </main>
   );
 }
