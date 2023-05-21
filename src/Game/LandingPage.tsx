@@ -4,8 +4,9 @@ import Authorized from "../auth/Authorized";
 export default function LandingPage() {
   const navigate = useNavigate();
   return (
-    <main className="wrapper">
-      <section className="landing-page">
+    <>
+    {/* // <main className="wrapper">
+    //   <section className="landing-page"> */}
         <h1>Cacarrot</h1>
         <p className="paragraph">
           <Authorized
@@ -21,16 +22,8 @@ export default function LandingPage() {
             }
             notAuthorized={
               <>
-                    <button
-                className="my-button"
-                onClick={() => {
-                  navigate("create");
-                }}
-              >
-                Create your own Cacarrot
-              </button>
-                {/* <button onClick={()=> navigate('/login')}>Login</button>
-                <button  onClick={()=> navigate('/register')}>Register</button> */}
+                <button onClick={() => navigate("/login")}>Login</button>
+                <button onClick={() => navigate("/register")}>Register</button>
               </>
             }
           />
@@ -40,7 +33,8 @@ export default function LandingPage() {
           <input className="my-input" placeholder="Put in game code" />
           <button className="my-button">Join</button>
         </p>
-      </section>
-    </main>
+    {/* //   </section>
+    // </main> */}
+    </>
   );
 }

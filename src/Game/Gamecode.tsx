@@ -28,7 +28,7 @@ export default function Gamecode() {
   }
   return (
     <div
-      className="wrapper column-shaped-container"
+      className="column-shaped-container"
     >
       <h2>Your game code</h2>
       <span className="column-shaped-container"

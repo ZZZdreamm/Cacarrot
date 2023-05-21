@@ -54,14 +54,14 @@ export default function GameHost() {
 
 
   function getWinners(){
-    let localWinners = players.sort((player1, player2) => player1.points - player2.points)
-    setWinners([localWinners[localWinners.length-1], localWinners[localWinners.length-2], localWinners[localWinners.length-3]])
+    let localWinners = players.sort((player1, player2) => player2.points - player1.points)
+    setWinners([localWinners[0], localWinners[1], localWinners[2]])
   }
   return (
     <>
       <div
-        className="wrapper column-shaped-container"
-        style={{ justifyContent: "space-between" }}
+        className="column-shaped-container"
+        style={{ justifyContent: "space-between", width:'100%', height:'100%' }}
       >
         {shownComponent == "question" && (
           <ShownQuestion currentQuestion={currentQuestion} time={time} setTime={setTime} />

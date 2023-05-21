@@ -31,10 +31,10 @@ export default function CreateTemplate() {
   const timesForAnswer = [5, 10, 20, 30, 40]
 
   function saveTemplate(){
-    
+
   }
   return (
-    <main className="wrapper" style={{ display: "flex" }}>
+    <main style={{ display: "flex", width:'100%', height:'100%' }}>
       <div className="bar question-bar">
         {questions.map((question) => (
           <SlideTemplate

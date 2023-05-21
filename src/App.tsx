@@ -9,6 +9,7 @@ import { claim } from "./auth/auth.models";
 import { getClaims } from "./auth/HandleJWT";
 import AuthenticationContext from "./auth/AuthenticationContext";
 import { ModalProvider } from "styled-react-modal";
+import GoToMenuButton from "./Utilities/GoToMenuButton";
 
 function App() {
   const navigate = useNavigate();
@@ -26,18 +27,22 @@ function App() {
 
   return (
     <AuthenticationContext.Provider value={{ claims, update: setClaims }}>
-      {/* <ThemeProvider theme={theme}> */}
       <ModalProvider>
+        <GoToMenuButton />
         <div className="App">
-          <Routes>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                Component={route.component}
-              />
-            ))}
-          </Routes>
+          <main className="wrapper">
+            <section className="landing-page">
+              <Routes>
+                {routes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    Component={route.component}
+                  />
+                ))}
+              </Routes>
+            </section>
+          </main>
         </div>
       </ModalProvider>
     </AuthenticationContext.Provider>

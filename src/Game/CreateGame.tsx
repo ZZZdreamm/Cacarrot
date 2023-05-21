@@ -52,8 +52,9 @@ export default function CreateGame() {
   }
 
   return (
-    <main className="wrapper">
-      <section className="landing-page">
+    <>
+    {/* // <main className="wrapper">
+    //   <section className="landing-page"> */}
         <section className="flex-section">
           <article className="half-article">
             {/* <p className="paragraph">Choose game template</p> */}
@@ -98,7 +99,8 @@ export default function CreateGame() {
             </button>
           </article>
         </section>
-      </section>
-    </main>
+    {/* //   </section>
+    // </main> */}
+    </>
   );
 }

@@ -1,4 +1,3 @@
-// import { Form, Formik, FormikHelpers } from "formik";
 import { userCredentials } from "./auth.models";
 import * as Yup from "yup";
 import TextField from "../Forms/TextField";
@@ -6,11 +5,9 @@ import Button from "../Utilities/Button";
 import { Link } from "react-router-dom";
 import ImageField from "../Forms/ImageField";
 import ImageContainer from "../Forms/ImageContainer";
-// import { Formik } from "formik/dist/Formik";
-// import { Form } from "formik/dist/Form";
-// import { FormikHelpers } from "formik/dist/types";
+import { useFormik } from "formik";
+import { basicSchema } from "./Schemas";
 // import { Form, Formik, FormikHelpers } from "formik";
-
 
 export default function AuthForm(props: authFormProps, ifRegister: boolean) {
   const { render, imageURL, imageBase64, fileToData } = ImageField({
@@ -18,8 +15,46 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
     imageURL: "",
     field: "",
   });
+  //@ts-ignore
+  const onSubmit = (values, actions) => {
+      props.onSubmit(values)
+  }
+  const {values, errors, touched, handleBlur, handleChange, handleSubmit} = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema:basicSchema,
+    onSubmit
+  });
   return (
-    <></>
+    <form autoComplete="off" onSubmit={handleSubmit}>
+      <label htmlFor="email">Email</label>
+      <input
+        style={{ textAlign: "left" }}
+        className="my-input"
+        value={values.email}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+      />
+      {errors.email && <div className="error">{errors.email}</div>}
+      <label htmlFor="password">Password</label>
+      <input
+        style={{ textAlign: "left" }}
+        className="my-input"
+        value={values.password}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        id="password"
+        type="password"
+        placeholder="Enter your password"
+      />
+      {errors.password && <div className="error">{errors.password}</div>}
+      <button type="submit">Submit</button>
+    </form>
     // <Formik
     //   initialValues={props.model}
     //   onSubmit={props.onSubmit}
@@ -67,7 +102,7 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
 interface authFormProps {
   model: userCredentials;
   onSubmit(
-    values: userCredentials,
+    values: userCredentials
     // actions: FormikHelpers<userCredentials>
   ): void;
   submitButtonName: string;
