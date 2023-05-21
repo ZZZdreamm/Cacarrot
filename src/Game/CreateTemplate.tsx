@@ -9,11 +9,11 @@ export default function CreateTemplate() {
   const [questions, setQuestions] = useState<Question[]>([
     {
       questionNumber: 1,
-      question: "q",
-      answerA: "as",
-      answerB: "z",
-      answerC: "q",
-      answerD: "er",
+      question: "",
+      answerA: "",
+      answerB: "",
+      answerC: "",
+      answerD: "",
       correctAnswer: "",
     },
     {

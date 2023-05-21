@@ -1,0 +1,51 @@
+import { useState } from "react";
+import Modal from "styled-react-modal";
+
+const StyledModal = Modal.styled`
+  width: 20rem;
+  height: 20rem;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  flex-direction: column;
+`;
+
+//@ts-ignore
+export default function MyModal({
+  isOpen,
+  toggleModal,
+  children,
+  submitButtonText,
+  onSubmit,
+}:MyModalProps) {
+  return (
+    <StyledModal
+      isOpen={isOpen}
+      onBackgroundClick={toggleModal}
+      onEscapeKeydown={toggleModal}
+    >
+      {/* <span>I am a modal!</span> */}
+      {children}
+      <div>
+        <button
+          onClick={() => {
+            toggleModal();
+            onSubmit();
+          }}
+        >
+          {submitButtonText}
+        </button>
+        <button onClick={toggleModal}>Close</button>
+      </div>
+    </StyledModal>
+  );
+}
+
+
+interface MyModalProps{
+  isOpen:any;
+  toggleModal:any;
+  children:any;
+  submitButtonText:string;
+  onSubmit:any;
+}

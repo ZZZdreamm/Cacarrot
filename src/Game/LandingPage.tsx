@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Authorized from "../auth/Authorized";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -7,14 +8,32 @@ export default function LandingPage() {
       <section className="landing-page">
         <h1>Cacarrot</h1>
         <p className="paragraph">
-          <button
-            className="my-button"
-            onClick={() => {
-              navigate("create");
-            }}
-          >
-            Create your own Cacarrot
-          </button>
+          <Authorized
+            isAuthorized={
+              <button
+                className="my-button"
+                onClick={() => {
+                  navigate("create");
+                }}
+              >
+                Create your own Cacarrot
+              </button>
+            }
+            notAuthorized={
+              <>
+                    <button
+                className="my-button"
+                onClick={() => {
+                  navigate("create");
+                }}
+              >
+                Create your own Cacarrot
+              </button>
+                {/* <button onClick={()=> navigate('/login')}>Login</button>
+                <button  onClick={()=> navigate('/register')}>Register</button> */}
+              </>
+            }
+          />
         </p>
         <p className="paragraph">
           <div>Join game with code</div>
