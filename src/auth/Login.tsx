@@ -9,15 +9,16 @@ import { authenticationResponse, userCredentials } from "./auth.models";
 import AuthenticationContext from "./AuthenticationContext";
 import AuthForm from "./AuthForm";
 import { getClaims, saveToken } from "./HandleJWT";
+import { profileDTO } from "../Profile/profiles.models";
+import { getProfile, saveProfile } from "../Profile/HandleProfile";
+import ProfileContext from "../Profile/ProfileContext";
 // import ProfileContext from "../Profile/ProfileContext";
 
 export default function Login() {
   const [errors, setErrors] = useState<string[]>([]);
   const { update } = useContext(AuthenticationContext);
-  // const {profileDTO,updateProfile} = useContext(ProfileContext);
+  const {updateProfile} = useContext(ProfileContext);
   const navigate = useNavigate();
-
-  const { claims } = useContext(AuthenticationContext);
 
   async function login(credentials: userCredentials) {
     console.log(credentials)
@@ -29,10 +30,10 @@ export default function Login() {
       );
       saveToken(response.data);
       update(getClaims());
-      // const profileResponse = await axios.post<profileDTO>(`${urlAccounts}/loginProfile/${credentials.email}`);
-      // console.log(profileResponse)
-      // saveProfile(profileResponse.data);
-      // updateProfile(getProfile());
+      const profileResponse = await axios.post<profileDTO>(`${urlAccounts}/loginProfile/${credentials.email}`);
+      console.log(profileResponse)
+      saveProfile(profileResponse.data);
+      updateProfile(getProfile());
       navigate("/");
       navigate(0);
     } catch (error) {
@@ -41,18 +42,14 @@ export default function Login() {
   }
   return (
     <>
-      {/* <main className="wrapper">
-        <section className="landing-page"> */}
           <h3 style={{ fontSize: "3em" }}>Login</h3>
-          {/* <DisplayErrors errors={errors}/> */}
+          <DisplayErrors errors={errors}/>
           <AuthForm
             model={{ email: "", password: "" }}
             onSubmit={async (values) => await login(values)}
             submitButtonName="Login"
           />
           <span style={{ color: "red" }}>{errors}</span>
-        {/* </section>
-      </main> */}
     </>
   );
 }

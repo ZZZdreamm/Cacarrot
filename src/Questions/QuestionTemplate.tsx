@@ -27,34 +27,33 @@ export default function QuestionTemplate({
   useEffect(() => {
     const updatedCheckboxes = checkboxes.map((checkbox) => {
       if (
-        (checkbox.id === 0 && question.correctAnswer == "A") ||
-        (checkbox.id === 1 && question.correctAnswer == "B") ||
-        (checkbox.id === 2 && question.correctAnswer == "C") ||
-        (checkbox.id === 3 && question.correctAnswer == "D")
+        (checkbox.id === 0 && question.correctAnswer === "A") ||
+        (checkbox.id === 1 && question.correctAnswer === "B") ||
+        (checkbox.id === 2 && question.correctAnswer === "C") ||
+        (checkbox.id === 3 && question.correctAnswer === "D")
       ) {
         return { ...checkbox, checked: true };
       }
       return { ...checkbox, checked: false };
     });
-    console.log(updatedCheckboxes);
     setCheckboxes(updatedCheckboxes);
   }, [questionNumber]);
 
   function onQuestionChange(whatChanged: any, changedValue: string) {
     setQuestions((prevQuestions: Question[]) => {
       prevQuestions.forEach((question) => {
-        if (question.questionNumber == questionNumber) {
-          if (whatChanged == "question") {
+        if (question.questionNumber === questionNumber) {
+          if (whatChanged === "question") {
             question.question = changedValue;
-          } else if (whatChanged == "answerA") {
+          } else if (whatChanged === "answerA") {
             question.answerA = changedValue;
-          } else if (whatChanged == "answerB") {
+          } else if (whatChanged === "answerB") {
             question.answerB = changedValue;
-          } else if (whatChanged == "answerC") {
+          } else if (whatChanged === "answerC") {
             question.answerC = changedValue;
-          } else if (whatChanged == "answerD") {
+          } else if (whatChanged === "answerD") {
             question.answerD = changedValue;
-          } else if (whatChanged == "correctAnswer") {
+          } else if (whatChanged === "correctAnswer") {
             question.correctAnswer = changedValue;
           }
         }
@@ -113,6 +112,7 @@ export default function QuestionTemplate({
       <img
         className="question-image"
         src={`${ReadyImagesURL}/landscape-image.jpg`}
+        alt="Beautiful"
       />
       <div className="answers-placeholder">
         <span id="answer-A" className="answer">

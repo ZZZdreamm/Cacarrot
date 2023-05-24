@@ -11,7 +11,7 @@ export default function Statistics({ time, setTime, players, setPlayers }) {
   },[])
   return (
     <>
-      <Timer time={time} setTime={setTime} />
+      <Timer time={time} setTime={setTime} bonusStyling={{top:'1%'}} />
 
       <div className="player-stats-list column-shaped-container">
       <p style={{display:'flex', justifyContent:'space-between', width:'80%'}}>

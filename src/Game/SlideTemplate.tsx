@@ -15,15 +15,18 @@ export default function SlideTemplate({slideNumber, setQuestions,choosenQuestion
             return newQuestions
         })
     }
-    const colorSlide = slideNumber == choosenQuestion ? {background: '#7c73e6'} : {}
+    const colorSlide = slideNumber === choosenQuestion ? {background: '#7c73e6'} : {}
     return(
-        <div className="slide" style={colorSlide} onClick={()=>{setChoosenQuestion(slideNumber)}}>
+        <div className="slide" style={colorSlide}
+        // onClick={()=>{setChoosenQuestion(slideNumber)}}
+        >
+
             <div style={{position:'relative', left:'25%'}}>{slideNumber}</div>
-            <img className="small-image" src={`${ReadyImagesURL}/bin-image.png`} onClick={()=>{
+            <img className="small-image" src={`${ReadyImagesURL}/bin-image.png`} alt="Bin" onClick={()=>{
                 adjustQuestionsNumbers()
                 removeItemFromState(slideNumber, setQuestions)
             }}/>
-            <img className="slide-image" src={`${ReadyImagesURL}/question-image.png`}/>
+            <img className="slide-image" src={`${ReadyImagesURL}/question-image.png`} alt="Slide" onClick={()=>{setChoosenQuestion(slideNumber)}}/>
         </div>
     )
 }

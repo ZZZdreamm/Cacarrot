@@ -5,7 +5,7 @@ import { ReadyImagesURL } from "../appUrls";
 export default function ShownQuestion({currentQuestion, time, setTime }) {
   return (
     <>
-      <Timer time={time} setTime={setTime} />
+      <Timer time={time} setTime={setTime} bonusStyling={{left:'90%'}} />
 
         <div className="my-input shown-question">
           {currentQuestion.question}
