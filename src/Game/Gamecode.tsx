@@ -4,10 +4,10 @@ import PlayerContainer from "./PlayerContainer";
 import { useEffect, useState } from "react";
 import {
   createGameInDB,
-  gamesRef,
   getGameData,
-  setGameStarted,
-} from "../FirebaseDatabase/FirebaseConfig";
+  setDataInDB,
+} from "../FirebaseDatabase/GamesInDB";
+import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
 
 export default function Gamecode() {
   const location = useLocation();
@@ -24,7 +24,7 @@ export default function Gamecode() {
     time:state.template.questionTime,
     gamePhase:1
   });
-  // const [game, setGame] = useState<Game | null>(null);
+
   const [startDisabled, setStartDisabled] = useState(true);
   function startGame() {
     if (game!.players.length >= 1) {
@@ -32,7 +32,7 @@ export default function Gamecode() {
         ...game!,
         started: 'started',
       });
-      setGameStarted(game.gamecode, 'started')
+      setDataInDB(game.gamecode, 'started', 'gameStarted')
     }
   }
 

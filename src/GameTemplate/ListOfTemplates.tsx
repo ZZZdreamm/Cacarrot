@@ -1,5 +1,5 @@
-import TemplateName from "./TemplateName";
-import { GameTemplate } from "./game.models";
+import TemplateName from "../Game/TemplateName";
+import { GameTemplate } from "../Game/game.models";
 
 export default function ListOfTemplates({ templates, chooseTemplate, choosenTemplate }: ListOfTemplatesProps) {
   return (

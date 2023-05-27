@@ -24,7 +24,6 @@ export default function MyModal({
       onBackgroundClick={toggleModal}
       onEscapeKeydown={toggleModal}
     >
-      {/* <span>I am a modal!</span> */}
       {children}
       <div>
         <button

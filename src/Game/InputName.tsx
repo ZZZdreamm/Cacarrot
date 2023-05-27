@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MyInput from "../Utilities/MyInput";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getGameData, joinGame } from "../FirebaseDatabase/FirebaseConfig";
+import { getGameData, joinGame } from "../FirebaseDatabase/GamesInDB";
 
 export default function InputName(){
     const location = useLocation();

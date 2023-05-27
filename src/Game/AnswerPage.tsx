@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { checkIfAnswerSended, sendAnswerToDB } from "../FirebaseDatabase/FirebaseConfig"
+import { checkIfAnswerSended, sendAnswerToDB } from "../FirebaseDatabase/GamesInDB"
 import Timer from "../Utilities/Timer"
 
 //@ts-ignore

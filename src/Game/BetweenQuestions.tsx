@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ReadyImagesURL } from "../appUrls";
-import { getCurrentQuestionFromDB, getGameStart, getQuestionsDoneFromDB, setPointsForPlayer } from "../FirebaseDatabase/FirebaseConfig";
+import { fetchData, getCurrentQuestionFromDB, getGameStart, setPointsForPlayer } from "../FirebaseDatabase/GamesInDB";
 import { Answer, Player } from "./game.models";
 
 //@ts-ignore
@@ -9,7 +9,7 @@ export default function BetweenQuestions({gameState, player , setShownComponent,
 
 
     useEffect(()=>{
-        getQuestionsDoneFromDB(gameState.gamecode, setQuestionsDone)
+        fetchData(gameState.gamecode, questionDone, setQuestionsDone, 'questionDone')
         getCurrentQuestionFromDB(gameState.gamecode, setCurrentQuestion)
     },[])
 

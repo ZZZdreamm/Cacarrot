@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Question } from "../Questions/questions.models";
+import { Question } from "./questions.models";
 import { removeItemFromState } from "../Utilities/StateModifications";
 import { ReadyImagesURL } from "../appUrls";
 

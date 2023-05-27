@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import MyModal from "../Utilities/Modal";
 import { useEffect, useState } from "react";
-import ListOfTemplates from "./ListOfTemplates";
+import ListOfTemplates from "../GameTemplate/ListOfTemplates";
 import { GameTemplate } from "./game.models";
-import { getUserTemplates } from "../FirebaseDatabase/FirebaseConfig";
+import { getUserTemplates } from "../FirebaseDatabase/TemplatesInDB";
 
 export default function CreateGame() {
   const navigate = useNavigate();
@@ -18,35 +18,9 @@ export default function CreateGame() {
   useEffect(()=>{
     const userId = localStorage.getItem('id')
     getUserTemplates(userId!, setTemplates)
-
-    // sendDataToFirebase({ name: 'John', age: 25 })
   },[])
 
 
-
-  function sendDataToFirebase(data:any) {
-    const url = 'https://us-central1-kakoot-d06ff.cloudfunctions.net/echoData';
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode:'no-cors',
-      body: JSON.stringify(data),
-    })
-      // .then(response => response.json())
-      .then(response => {
-        // const responseData = response.json()
-        console.log('Response from Firebase server:', response);
-
-        // Handle the response from the server
-      })
-      .catch(error => {
-        console.error('Error sending data to Firebase:', error);
-        // Handle the error
-      });
-  }
 
   useEffect(()=>{
     setChoosenTemplate(templates[0])

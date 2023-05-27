@@ -1,20 +1,17 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Game, Player } from "./game.models";
-import { Question } from "../Questions/questions.models";
-import { ReadyImagesURL } from "../appUrls";
-import Timer from "../Utilities/Timer";
+import { Question } from "../GameTemplate/questions.models";
 import ShownQuestion from "./ShownQuestion";
 import Statistics from "./Statistics";
 import Winners from "./Winners";
 import {
   getGameData,
-  sendGameData,
   setCurrentQuestionInDB,
-  setGameStarted,
-  setTimeInDB,
-} from "../FirebaseDatabase/FirebaseConfig";
-import { fetchData, setDataInDB } from "../Utilities/StateModifications";
+  fetchData,
+  setDataInDB
+} from "../FirebaseDatabase/GamesInDB";
+import UnloadPrompt from "../Utilities/UnloadPrompt";
 
 export default function GameHost() {
   const location = useLocation();
@@ -32,21 +29,24 @@ export default function GameHost() {
   const [winners, setWinners] = useState<Player[]>([]);
   const [time, setTime] = useState<number>();
   const [gamePhase, setGamePhase] = useState<number>();
-  const [showPage, setShowPage] = useState(false)
+  const [showPage, setShowPage] = useState(false);
 
-
-  useEffect(()=>{
-    if((time || time ==0) && (currentQuestionIndex  || currentQuestionIndex == 0) && shownComponent){
-      setShowPage(true)
+  useEffect(() => {
+    if (
+      (time || time == 0) &&
+      (currentQuestionIndex || currentQuestionIndex == 0) &&
+      shownComponent
+    ) {
+      setShowPage(true);
     }
-  },[currentQuestionIndex, gamePhase, time])
+  }, [currentQuestionIndex, gamePhase, time]);
 
   useEffect(() => {
     if (gamecode) {
       fetchData(gamecode, time, setTime, "time");
       fetchData(gamecode, gamePhase, setGamePhase, "gamePhase");
       // nie tu
-      fetchData(gamecode, 0, setCurrentQuestionIndex, 'currentQuestionIndex')
+      fetchData(gamecode, 0, setCurrentQuestionIndex, "currentQuestionIndex");
       getGameData(gamecode, setGame, true);
     }
   }, [gamecode]);
@@ -54,12 +54,16 @@ export default function GameHost() {
   useEffect(() => {
     if (gamePhase) {
       if (gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
-        setGameStarted(game.gamecode, "winners");
+        setDataInDB(game.gamecode, "winners", 'gameStarted');
         getWinners();
       } else if (gamePhase % 2 == 0) {
         setShownComponent("statistics");
       } else if (gamePhase % 2 == 1) {
-        if ((time || time == 0) && time < 1 && (currentQuestionIndex || currentQuestionIndex == 0)) {
+        if (
+          (time || time == 0) &&
+          time < 1 &&
+          (currentQuestionIndex || currentQuestionIndex == 0)
+        ) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
         setShownComponent("question");
@@ -72,47 +76,19 @@ export default function GameHost() {
 
   useEffect(() => {
     if (time || time == 0) {
-      setTimeInDB(game.gamecode, time);
+      setDataInDB(game.gamecode, time, 'time');
       if (time < 1 && gamePhase) {
-        // console.log(game);
         setGame({
           ...game,
           gamePhase: game.gamePhase + 1,
         });
         setGamePhase(gamePhase + 1);
         setDataInDB(game.gamecode, game.gamePhase + 1, "gamePhase");
-        // if (gamePhase == game.gameTemplate.allQuestions.length * 2) {
-        //   setGameStarted(game.gamecode, "winners");
-        //   getWinners();
-        // } else if (gamePhase % 2 == 1) {
-        //   setShownComponent("statistics");
-        // } else if (gamePhase % 2 == 0) {
-        //   setCurrentQuestionIndex(currentQuestionIndex + 1);
-        //   setShownComponent("question");
-        // }
-        // setTime(game.gameTemplate.questionTime);
-        // if (
-        //   currentQuestionIndex < game.gameTemplate.allQuestions.length - 1 &&
-        //   shownComponent == "statistics"
-        // ) {
-        //   setCurrentQuestionIndex(currentQuestionIndex + 1);
-        // }
-
-        // if(shownComponent == 'question' && currentQuestionIndex <= game.gameTemplate.allQuestions.length - 1){
-        //   setShownComponent('statistics')
-        //   setTime(game.gameTemplate.questionTime);
-        // }else if (shownComponent == 'statistics' && currentQuestionIndex+1 <= game.gameTemplate.allQuestions.length - 1) {
-        //   setShownComponent("question");
-        //   setTime(game.gameTemplate.questionTime);
-        // }else{
-        //   setGameStarted(game.gamecode, 'winners')
-        //   getWinners()
-        // }
       }
     }
   }, [time]);
   useEffect(() => {
-    if(currentQuestionIndex){
+    if (currentQuestionIndex) {
       setCurrentQuestion(game.gameTemplate.allQuestions[currentQuestionIndex]);
       setCurrentQuestionInDB(game.gamecode, currentQuestionIndex);
     }
@@ -131,13 +107,12 @@ export default function GameHost() {
     setWinners([localWinners[0], localWinners[1], localWinners[2]]);
   }
 
-
   useEffect(() => {
     getGameData(game.gamecode, setGame, false);
   }, []);
 
   useEffect(() => {
-    if(currentQuestionIndex){
+    if (currentQuestionIndex) {
       setCurrentQuestionInDB(game.gamecode, currentQuestionIndex);
     }
   }, [shownComponent]);
@@ -146,34 +121,36 @@ export default function GameHost() {
     setPlayers(game.players);
   }, [game.players]);
 
-
   return (
     <>
-    {showPage && <div
-        className="column-shaped-container"
-        style={{
-          justifyContent: "space-between",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        {shownComponent == "question" && (
-          <ShownQuestion
-            currentQuestion={currentQuestion}
-            time={time}
-            setTime={setTime}
-          />
-        )}
-        {shownComponent == "statistics" && (
-          <Statistics
-            time={time}
-            setTime={setTime}
-            players={players}
-            setPlayers={setPlayers}
-          />
-        )}
-        {shownComponent == "winners" && <Winners winners={winners} />}
-      </div>}
+      <UnloadPrompt />
+      {showPage && (
+        <div
+          className="column-shaped-container"
+          style={{
+            justifyContent: "space-between",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {shownComponent == "question" && (
+            <ShownQuestion
+              currentQuestion={currentQuestion}
+              time={time}
+              setTime={setTime}
+            />
+          )}
+          {shownComponent == "statistics" && (
+            <Statistics
+              time={time}
+              setTime={setTime}
+              players={players}
+              setPlayers={setPlayers}
+            />
+          )}
+          {shownComponent == "winners" && <Winners winners={winners} />}
+        </div>
+      )}
     </>
   );
 }

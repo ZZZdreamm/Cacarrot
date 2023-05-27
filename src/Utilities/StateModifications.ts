@@ -1,4 +1,4 @@
-import { gamesRef, getPlayer } from "../FirebaseDatabase/FirebaseConfig";
+import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
 
 export const removeItemFromState = async (itemToRemoveIndex: number, setItems: any) => {
   setItems((prevItems: any) => {
@@ -14,46 +14,62 @@ export const addItemToState = async (itemToAdd:any, setItems:any) => {
   setItems((prevItems:any) => [...prevItems, itemToAdd])
 }
 
-export const setDataInDB = async (gamecode:string, data:any, actionType:string, playerId?:number) => {
-  if(actionType == 'gamePhase'){
-    gamesRef.child(gamecode).child('gamePhase').set(data)
-  }
-}
+// export const setDataInDB = async (gamecode:string, data:any, actionType:string, playerId?:number) => {
+//   if(actionType == 'currentQuestion'){
+//     await gamesRef.child(gamecode).child('currentQuestion').set(data)
+//   }else if(actionType == 'time'){
+//     await gamesRef.child(gamecode).child('time').set(data)
+//   }else if(actionType == 'questionDone'){
+//     await gamesRef.child(gamecode).child('currentQuestion').set(data)
+//   }else if(actionType == 'points'){
+//     await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('points').set(data)
+//   }else if(actionType == 'game'){
+//     await gamesRef.child(gamecode).set(data)
+//   }else if(actionType == 'shownComponent'){
+//     await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('shownComponent').set(data)
+//   }else if(actionType == 'players'){
+//     await gamesRef.child(gamecode).child('players').set(data)
+//   }else if(actionType == 'gamePhase'){
+//     await gamesRef.child(gamecode).child('gamePhase').set(data)
+//   }else  if(actionType == 'currentQuestionIndex'){
+//     await gamesRef.child(gamecode).child('currentQuestion').set(data)
+//   }else if(actionType == 'lastAnswer'){
+//     await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').set(data)
+//   }
+// }
 
-export const fetchData = async (gamecode:string, data :any, setData:(e:any) => void, actionType:string, playerId?:number) => {
-  const snapshot :any = await chooseType(actionType, gamecode, playerId)
-
-  let fetchedData = snapshot.val();
-  if (fetchedData) {
-    setData(fetchedData);
-  } else {
-    setData(data)
-  }
-};
-
+// export const fetchData = async (gamecode:string, data :any, setData:(e:any) => void, actionType:string, playerId?:number) => {
+//   const snapshot :any = await chooseType(actionType, gamecode, playerId)
+//   let fetchedData = snapshot.val();
+//   if (fetchedData) {
+//     setData(fetchedData);
+//   } else {
+//     setData(data)
+//   }
+// };
 
 
-async function chooseType(actionType:string, gamecode:string, playerId?:number){
-  if(actionType == 'currentQuestion'){
-    return await gamesRef.child(gamecode).child('currentQuestion').once('value')
-  }else if(actionType == 'time'){
-    return await gamesRef.child(gamecode).child('time').once('value')
-  }else if(actionType == 'questionDone'){
-    return await gamesRef.child(gamecode).child('currentQuestion').once('value')
-  }else if(actionType == 'points'){
-    return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('points').once('value')
-  }else if(actionType == 'game'){
-    return await gamesRef.child(gamecode).once('value')
-  }else if(actionType == 'shownComponent'){
-    return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('shownComponent').once('value')
-  }else if(actionType == 'players'){
-    return await gamesRef.child(gamecode).child('players').once('value')
-  }else if(actionType == 'gamePhase'){
-    return await gamesRef.child(gamecode).child('gamePhase').once('value')
-  }else  if(actionType == 'currentQuestionIndex'){
-    return await gamesRef.child(gamecode).child('currentQuestion').once('value')
-  }else if(actionType == 'lastAnswer'){
-    return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').once('value')
-  }
 
-}
+// async function chooseType(actionType:string, gamecode:string, playerId?:number){
+//   if(actionType == 'currentQuestion'){
+//     return await gamesRef.child(gamecode).child('currentQuestion').once('value')
+//   }else if(actionType == 'time'){
+//     return await gamesRef.child(gamecode).child('time').once('value')
+//   }else if(actionType == 'questionDone'){
+//     return await gamesRef.child(gamecode).child('currentQuestion').once('value')
+//   }else if(actionType == 'points'){
+//     return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('points').once('value')
+//   }else if(actionType == 'game'){
+//     return await gamesRef.child(gamecode).once('value')
+//   }else if(actionType == 'shownComponent'){
+//     return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('shownComponent').once('value')
+//   }else if(actionType == 'players'){
+//     return await gamesRef.child(gamecode).child('players').once('value')
+//   }else if(actionType == 'gamePhase'){
+//     return await gamesRef.child(gamecode).child('gamePhase').once('value')
+//   }else  if(actionType == 'currentQuestionIndex'){
+//     return await gamesRef.child(gamecode).child('currentQuestion').once('value')
+//   }else if(actionType == 'lastAnswer'){
+//     return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').once('value')
+//   }
+// }

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import Authorized from "../auth/Authorized";
-import MyInput from "../Utilities/MyInput";
+import Authorized from "./auth/Authorized";
+import MyInput from "./Utilities/MyInput";
 import { useEffect, useState } from "react";
-import { checkIfGamecodeIsInDB } from "../FirebaseDatabase/FirebaseConfig";
+import { checkIfGamecodeIsInDB } from "./FirebaseDatabase/GamesInDB";
 
 export default function LandingPage() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getGameStart } from "../FirebaseDatabase/FirebaseConfig";
+import { getGameStart } from "../FirebaseDatabase/GamesInDB";
 import { useLocation, useNavigate } from "react-router-dom";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import ClearLocalStorage from "../Utilities/ClearLocalStorage";

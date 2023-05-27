@@ -8,8 +8,9 @@ import {
   getTimeFromDB,
   sendAnswerToDB,
   setPointsForPlayer,
-  setShownComponentInDB,
-} from "../FirebaseDatabase/FirebaseConfig";
+  fetchData,
+  setDataInDB
+} from "../FirebaseDatabase/GamesInDB";
 import { useFetcher, useLocation } from "react-router-dom";
 import { Answer, Game, Player } from "./game.models";
 import AnswerPage from "./AnswerPage";
@@ -17,7 +18,6 @@ import Statistics from "./Statistics";
 import Winners from "./Winners";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import BetweenQuestions from "./BetweenQuestions";
-import { fetchData } from "../Utilities/StateModifications";
 
 export default function GamePlayer() {
   const location = useLocation();
@@ -59,8 +59,6 @@ export default function GamePlayer() {
 
   useEffect(()=>{
     if(game.gamecode && playerName){
-      // getTimeFromDB(game?.gamecode, setTime)
-
       if(!player){
         getPlayer(game.gamecode, playerName, setPlayer)
       }
@@ -78,8 +76,6 @@ export default function GamePlayer() {
 
   useEffect(() => {
     if (time < 1) {
-      // setQuestionDone(questionDone+1)
-      // setTime(state.game.gameTemplate.questionTime);
       setTimeout(() => {
         if(game.gamePhase == game.gameTemplate.allQuestions.length*2){
           getWinners()
@@ -104,7 +100,6 @@ export default function GamePlayer() {
   }, [game?.players]);
 
 
-
   useEffect(() => {
     if (game?.started == 'winners') {
         getWinners()
@@ -120,26 +115,11 @@ export default function GamePlayer() {
     setWinners([localWinners[0], localWinners[1], localWinners[2]]);
   }
 
-
-
-
-  function getDataPreviousValue(setData: any, dataName: string, defaultValue:any) {
-    const storedData = localStorage.getItem(dataName);
-    if (storedData && storedData != 'undefined') {
-      setData(JSON.parse(storedData));
-    }
-    else {
-      setData(defaultValue);
-    }
-  }
-
-
   useEffect(()=>{
     if(player && shownComponent){
-      setShownComponentInDB(game.gamecode, shownComponent, player?.id)
+      setDataInDB(game.gamecode, shownComponent, 'shownComponent', player?.id)
     }
   },[shownComponent])
-
 
   function setPointsGivenLast(answer:Answer){
     if(game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer == answer.choosenAnswer && game.currentQuestion == answer.questionNumber){
@@ -155,6 +135,7 @@ export default function GamePlayer() {
 
   return (
     <>
+    <UnloadPrompt/>
       {shownComponent == "answers" && gameStart == 'started' && (
         <AnswerPage
           gameState={game}
@@ -164,7 +145,6 @@ export default function GamePlayer() {
           username={state.username}
           setPointsForLast={setPointsGivenLast} lastAnswer={lastAnswer} setLastAnswer={setLastAnswer}        />
       )}
-      {/* {shownComponent == 'statistics' && <Statistics time={time} setTime={setTime} players={players} setPlayers={setPlayers}/>} */}
       {shownComponent == "between" && gameStart == 'started'  && (
         <BetweenQuestions
           gameState={game}

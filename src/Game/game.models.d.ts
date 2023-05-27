@@ -1,4 +1,4 @@
-import { Question } from "../Questions/questions.models";
+import { Question } from "../GameTemplate/questions.models";
 
 export interface Game{
     gameTemplate:GameTemplate;

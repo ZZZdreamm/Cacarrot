@@ -12,7 +12,7 @@ export function saveToken(authData:authenticationResponse){
 export function getClaims(): claim[]{
 
     const token = localStorage.getItem(tokenKey);
-    if(!token){
+    if(!token || token == 'null'){
 
         return[];
     }
