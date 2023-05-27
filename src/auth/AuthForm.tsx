@@ -40,7 +40,7 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
         type="email"
         placeholder="Enter your email"
       />
-      {errors.email && <div className="error">{errors.email}</div>}
+      {touched.email &&  errors.email && <div className="error">{errors.email}</div>}
       <label htmlFor="password">Password</label>
       <input
         style={{ textAlign: "left" }}
@@ -52,7 +52,7 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
         type="password"
         placeholder="Enter your password"
       />
-      {errors.password && <div className="error">{errors.password}</div>}
+      {touched.password && errors.password && <div className="error">{errors.password}</div>}
       <button type="submit">Submit</button>
     </form>
     // <Formik

@@ -35,8 +35,6 @@ export default function LandingPage() {
   }, [goodCode]);
   return (
     <>
-      {/* // <main className="wrapper">
-    //   <section className="landing-page"> */}
       {showHosting && (
         <>
           <h1>Cacarrot</h1>
@@ -66,7 +64,7 @@ export default function LandingPage() {
         </>
       )}
 
-      <p className="paragraph">
+      <div className="paragraph" style={{marginTop:'30px'}}>
         <div>Join game with code</div>
         <MyInput
           value={gamecode}
@@ -84,9 +82,7 @@ export default function LandingPage() {
         >
           Join
         </button>
-      </p>
-      {/* //   </section>
-    // </main> */}
+      </div>
     </>
   );
 }

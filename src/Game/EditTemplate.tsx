@@ -8,17 +8,19 @@ import { saveTemplateInDB } from "../FirebaseDatabase/FirebaseConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import SlideTemplate from "./SlideTemplate";
 import { addItemToState } from "../Utilities/StateModifications";
+import { removeItemFromState } from "../Utilities/StateModifications";
 
 export default function EditTemplate() {
-
-    const location = useLocation()
-    const gameTemplate = location.state
+  const location = useLocation();
+  const gameTemplate = location.state;
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   function toggleModal(e: any) {
     setIsOpen(!isOpen);
   }
-  const [questions, setQuestions] = useState<Question[]>(gameTemplate.allQuestions);
+  const [questions, setQuestions] = useState<Question[]>(
+    gameTemplate.allQuestions
+  );
   const [choosenQuestion, setChoosenQuestion] = useState(1);
 
   const [questionTime, setQuestionTime] = useState(gameTemplate.questionTime);
@@ -57,16 +59,32 @@ export default function EditTemplate() {
     }
     return false;
   }
+
+  const deleteQuestion = async (slideNumber: number) => {
+    if (
+      (slideNumber >= questions.length || slideNumber < choosenQuestion) &&
+      choosenQuestion > 1
+    ) {
+      setChoosenQuestion(choosenQuestion - 1);
+    } else {
+      setChoosenQuestion(1);
+    }
+    removeItemFromState(slideNumber, setQuestions);
+  };
   return (
-    <main style={{ display: "flex", width: "100%", height: "100%" }}>
+    <main className="question-placeholder">
       <div className="bar question-bar">
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <SlideTemplate
             key={question.questionNumber}
-            slideNumber={question.questionNumber}
+            slideNumber={index + 1}
+            questions={questions}
             setQuestions={setQuestions}
             choosenQuestion={choosenQuestion}
             setChoosenQuestion={setChoosenQuestion}
+            removeSlide={() => {
+              deleteQuestion(index + 1);
+            }}
           ></SlideTemplate>
         ))}
         <button
@@ -100,9 +118,6 @@ export default function EditTemplate() {
           toggleModal={toggleModal}
           children={
             <>
-              {/* <input className="my-input" style={{margin:'1rem', fontSize:'1.5rem'}} value={templateName} onChange={(event)=>{
-                    setTemplateName(event.target.value)
-                  }}/> */}
               <h2>Template name</h2>
               <MyInput
                 value={templateName}
@@ -120,12 +135,15 @@ export default function EditTemplate() {
         />
         <label>Time for answer</label>
         <select
+          value={questionTime}
           onChange={(event) => {
             setQuestionTime(parseInt(event.target.value));
           }}
         >
           {timesForAnswer.map((time) => (
-            <option value={time}>{time} sec</option>
+            <option key={time} value={time}>
+              {time} sec
+            </option>
           ))}
         </select>
       </div>

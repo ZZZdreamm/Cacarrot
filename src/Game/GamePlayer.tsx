@@ -46,16 +46,7 @@ export default function GamePlayer() {
     const getName = state.username ? state.username : localStorage.getItem('username')
     setPlayerName(getName)
     getTimeFromDB(game?.gamecode, setTime)
-
     getGameStart(game.gamecode, setGameStart)
-
-    // getDataPreviousValue(setGameState, 'gameState', state)
-    // getDataPreviousValue(setPlayers, 'players', game?.players)
-    // getDataPreviousValue(setQuestionDone, 'questionDone', 0)
-    // getDataPreviousValue(setPoints, 'points', 0)
-    // getDataPreviousValue(setShownComponent, 'shownComponent', 'answers')
-    // getDataPreviousValue(setTime, 'time', state.game.gameTemplate.questionTime)
-    // getDataPreviousValue(setGame, 'game', )
   }, []);
 
   useEffect(()=>{
@@ -149,22 +140,8 @@ export default function GamePlayer() {
     }
   },[shownComponent])
 
-  useEffect(()=>{
-    if(game){
-        localStorage.setItem('game', JSON.stringify(game))
-    }
-  },[game])
 
   function setPointsGivenLast(answer:Answer){
-    // console.log('points given')
-    // let answer :Answer = {choosenAnswer:'', sendingTime:0, questionNumber:0}
-    // game.players.forEach((player:Player) => {
-    //     if(player.name == state.username){
-    //         answer = player.lastAnswer
-    //     }
-    // });
-    console.log(answer)
-    console.log(game.gameTemplate.allQuestions[game.currentQuestion])
     if(game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer == answer.choosenAnswer && game.currentQuestion == answer.questionNumber){
         setPoints((points) => {
             const newPoints = 1000 - 100*answer.sendingTime

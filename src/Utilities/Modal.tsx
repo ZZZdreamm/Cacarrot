@@ -2,8 +2,8 @@ import { useState } from "react";
 import Modal from "styled-react-modal";
 
 const StyledModal = Modal.styled`
-  width: 20rem;
-  height: 20rem;
+  width: 30rem;
+  height: 30rem;
   display: flex;
   align-items: center;
   background-color: #ffffff;

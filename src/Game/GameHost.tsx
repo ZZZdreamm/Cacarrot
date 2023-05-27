@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Game, Player } from "./game.models";
 import { Question } from "../Questions/questions.models";
@@ -174,31 +174,6 @@ export default function GameHost() {
         )}
         {shownComponent == "winners" && <Winners winners={winners} />}
       </div>}
-      {/* <div
-        className="column-shaped-container"
-        style={{
-          justifyContent: "space-between",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        {shownComponent == "question" && (
-          <ShownQuestion
-            currentQuestion={currentQuestion}
-            time={time}
-            setTime={setTime}
-          />
-        )}
-        {shownComponent == "statistics" && (
-          <Statistics
-            time={time}
-            setTime={setTime}
-            players={players}
-            setPlayers={setPlayers}
-          />
-        )}
-        {shownComponent == "winners" && <Winners winners={winners} />}
-      </div> */}
     </>
   );
 }

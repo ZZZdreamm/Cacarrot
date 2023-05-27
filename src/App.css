@@ -1,5 +1,28 @@
-#root{
-  font-size: 16px;
+@media only screen and (min-width:2400px) {
+  html{
+    font-size: 32px;
+  }
+}
+
+@media only screen and (min-width:1100px) and (max-width:2400px) {
+  html{
+    font-size: 16px;
+  }
+}
+@media only screen and (min-width:700px) and (max-width: 1100px) {
+  html{
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width:400px) and (max-width: 700px) {
+  html{
+    font-size: 10px;
+  }
+}
+@media only screen and (max-width:400px) {
+  html{
+    font-size: 8px;
+  }
 }
 body{
   color: #2f2f2f;
@@ -58,6 +81,25 @@ form{
   height: 100vh;
   width: 100vw;
 } */
+::-webkit-scrollbar {
+  width: 1rem;
+}
+::-webkit-scrollbar-track {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2f2f2f;
+  border-radius: 10px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .wrapper{
   background: hsl(246, 33%, 82%);
   font-size: 2rem;
@@ -69,7 +111,7 @@ form{
   justify-content: center; */
 }
 .landing-page{
-  height: 93%;
+  height: 93.5%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,8 +120,10 @@ form{
 .navbar{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 6.5%;
   width: 100%;
+  background: white;
 }
 .paragraph{
   text-align: center;
@@ -104,21 +148,28 @@ form{
   font-size: inherit;
   border-radius: 10px;
   text-align: center;
+  width: fit-content;
 }
 .flex-section{
   display: flex;
 }
 .half-article{
-  margin: 10%;
+  margin: 5%;
 }
 .column-shaped-container{
   display: flex;
   align-items: center;
   flex-direction: column;
 }
+.question-placeholder{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
 .question-template{
   /* position: relative; */
-  margin:0 12rem;
+  /* margin:0 12rem; */
   padding: 2rem;
   flex-grow: 2;
   max-width: 65%;
@@ -126,7 +177,7 @@ form{
   /* display: flex; */
 }
 .question-bar{
-  /* position: fixed; */
+  position: fixed;
   left: 0;
   padding-left: 0.2rem;
 }
@@ -150,11 +201,11 @@ form{
   word-break: normal;
 }
 .right-bar{
-  /* position: fixed; */
+  position: fixed;
   right: 0;
 }
 .bar{
-  height: 100%;
+  height: 94%;
   width: 12rem;
   background: #fafafa;
   overflow-y: auto;
@@ -225,6 +276,7 @@ form{
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  border-bottom: 1px solid black;
 }
 .player-list{
   display: flex;
@@ -289,7 +341,7 @@ form{
 .img-name-container{
   display: flex;
   align-items: center;
-  column-gap: 30px;
+  column-gap: 2rem;
 }
 .go-back-button{
   background: #c4c1e0;
@@ -308,4 +360,10 @@ form{
 }
 .answer-result-container{
   background: #7c73e6;
+  padding: 20px;
+  text-align: center;
+}
+.circle-image{
+  border-radius: 50%;
+
 }

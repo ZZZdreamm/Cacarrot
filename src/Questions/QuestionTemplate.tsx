@@ -22,7 +22,7 @@ export default function QuestionTemplate({
   ]);
 
   const characterLimit = 70;
-  const questionCharacterLimit = 40
+  const questionCharacterLimit = 40;
 
   useEffect(() => {
     const updatedCheckboxes = checkboxes.map((checkbox) => {
@@ -63,10 +63,10 @@ export default function QuestionTemplate({
       return prevQuestions;
     });
   }
-  const handleInput = (divRef: any, characterLimit:number) => {
+  const handleInput = (divRef: any, characterLimit: number) => {
     const content = divRef.current.innerText;
     if (content.length > characterLimit) {
-      console.log(divRef.current.innerText)
+      console.log(divRef.current.innerText);
       divRef.current.innerText = content.slice(0, characterLimit);
     }
   };
@@ -91,9 +91,6 @@ export default function QuestionTemplate({
     }
   }
 
-  // useEffect(() => {
-  //   console.log(checkboxes);
-  // }, [checkboxes]);
   return (
     <section className="question-template">
       <div

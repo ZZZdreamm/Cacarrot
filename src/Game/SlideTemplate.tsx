@@ -1,20 +1,11 @@
+import { useEffect, useState } from "react";
 import { Question } from "../Questions/questions.models";
 import { removeItemFromState } from "../Utilities/StateModifications";
 import { ReadyImagesURL } from "../appUrls";
 
 //@ts-ignore
-export default function SlideTemplate({slideNumber, setQuestions,choosenQuestion, setChoosenQuestion}){
-    function adjustQuestionsNumbers(){
-        setQuestions((questions:Question[]) =>{
-            const newQuestions = questions.map((question:Question) => {
-                if(question.questionNumber > slideNumber){
-                    question.questionNumber -= 1
-                }
-                return question
-            })
-            return newQuestions
-        })
-    }
+export default function SlideTemplate({slideNumber, questions, setQuestions,choosenQuestion, setChoosenQuestion, removeSlide}){
+
     const colorSlide = slideNumber === choosenQuestion ? {background: '#7c73e6'} : {}
     return(
         <div className="slide" style={colorSlide}
@@ -23,8 +14,7 @@ export default function SlideTemplate({slideNumber, setQuestions,choosenQuestion
 
             <div style={{position:'relative', left:'25%'}}>{slideNumber}</div>
             <img className="small-image" src={`${ReadyImagesURL}/bin-image.png`} alt="Bin" onClick={()=>{
-                adjustQuestionsNumbers()
-                removeItemFromState(slideNumber, setQuestions)
+                removeSlide()
             }}/>
             <img className="slide-image" src={`${ReadyImagesURL}/question-image.png`} alt="Slide" onClick={()=>{setChoosenQuestion(slideNumber)}}/>
         </div>

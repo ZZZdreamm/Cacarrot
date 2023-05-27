@@ -28,7 +28,7 @@ export default function WaitingRoom() {
   return (
     <>
       <UnloadPrompt handleLeaveWebiste={handleLeaveWebsite} />
-      <div style={{ fontSize: "2em", alignItems:'center', justifyContent:'center' }}>Wait for start of game...</div>
+      <div style={{ fontSize: "2em", alignItems:'center', justifyContent:'center', padding:'20px' }}>Wait for start of game...</div>
     </>
   );
 }

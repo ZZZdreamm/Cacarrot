@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Question } from "../Questions/questions.models";
 import SlideTemplate from "./SlideTemplate";
 import { addItemToState } from "../Utilities/StateModifications";
@@ -8,6 +8,7 @@ import { GameTemplate } from "./game.models";
 import MyModal from "../Utilities/Modal";
 import MyInput from "../Utilities/MyInput";
 import { useNavigate } from "react-router-dom";
+import { removeItemFromState } from "../Utilities/StateModifications";
 
 export default function CreateTemplate() {
   const navigate = useNavigate();
@@ -66,10 +67,10 @@ export default function CreateTemplate() {
 
   function saveTemplate() {
     const userId = localStorage.getItem("id");
-    let validQuestions : Question[] = []
-    questions.forEach(question => {
-      if(validateQuestion(question)){
-        validQuestions.push(question)
+    let validQuestions: Question[] = [];
+    questions.forEach((question) => {
+      if (validateQuestion(question)) {
+        validQuestions.push(question);
       }
     });
     const gameTemplate: GameTemplate = {
@@ -82,23 +83,46 @@ export default function CreateTemplate() {
     navigate("/create");
   }
 
-
-  function validateQuestion(question:Question){
-    if(question.answerA && question.answerB && question.answerC && question.answerD && question.question && question.correctAnswer){
-      return true
+  function validateQuestion(question: Question) {
+    if (
+      question.answerA &&
+      question.answerB &&
+      question.answerC &&
+      question.answerD &&
+      question.question &&
+      question.correctAnswer
+    ) {
+      return true;
     }
-    return false
+    return false;
   }
+
+
+
+  const deleteQuestion = async (slideNumber: number) => {
+      if((slideNumber >= questions.length || slideNumber < choosenQuestion) && choosenQuestion > 1){
+        setChoosenQuestion(choosenQuestion-1)
+      }else{
+        setChoosenQuestion(1)
+      }
+      removeItemFromState(slideNumber, setQuestions)
+  };
+
+
   return (
-    <main style={{ display: "flex", width: "100%", height: "100%" }}>
+    <main className="question-placeholder">
       <div className="bar question-bar">
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <SlideTemplate
             key={question.questionNumber}
-            slideNumber={question.questionNumber}
+            slideNumber={index+1}
+            questions={questions}
             setQuestions={setQuestions}
             choosenQuestion={choosenQuestion}
             setChoosenQuestion={setChoosenQuestion}
+            removeSlide={() => {
+              deleteQuestion(index+1);
+            }}
           ></SlideTemplate>
         ))}
         <button
@@ -132,15 +156,14 @@ export default function CreateTemplate() {
           toggleModal={toggleModal}
           children={
             <>
-              {/* <input className="my-input" style={{margin:'1rem', fontSize:'1.5rem'}} value={templateName} onChange={(event)=>{
-                  setTemplateName(event.target.value)
-                }}/> */}
               <h2>Template name</h2>
               <MyInput
                 value={templateName}
                 setValue={setTemplateName}
                 placeholder={"Enter template name"}
-                characterLimit={20} visibleWarning={true}              />
+                characterLimit={20}
+                visibleWarning={true}
+              />
             </>
           }
           submitButtonText={"Save template"}

@@ -9,8 +9,9 @@ export default function Winners({ winners }) {
     <>
       <div
         className="player-stats-list column-shaped-container"
-        style={{ margin: "10% 0 0 0", maxHeight: "40%" }}
+        style={{ margin: "10% 0 0 0", maxHeight: "40%"}}
       >
+        <h1>Winners</h1>
         <div className="player-stats" style={{ backgroundColor: "#ffd700" }}>
           <div className="img-name-container" style={{ height: "100%" }}>
             <img
@@ -19,7 +20,7 @@ export default function Winners({ winners }) {
             />
             <span>{winners[0].name}</span>
           </div>
-          <span>Score: {winners[0].points}</span>
+          <span  style={{marginLeft:'2rem'}}>Score: {winners[0].points}</span>
         </div>
         {winners[1] && (
           <div className="player-stats" style={{ backgroundColor: "#C0C0C0" }}>
