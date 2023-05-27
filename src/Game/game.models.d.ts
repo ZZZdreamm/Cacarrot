@@ -6,6 +6,8 @@ export interface Game{
     gamecode:string;
     started:string;
     currentQuestion:number;
+    time:number;
+    gamePhase:number;
 }
 
 export interface GameTemplate{
@@ -20,6 +22,7 @@ export interface Player{
     name:string;
     points:number;
     lastAnswer:Answer;
+    shownComponent:string;
 }
 export interface Answer{
     choosenAnswer:string;

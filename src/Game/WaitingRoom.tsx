@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { getGameStart, leaveGame } from "../FirebaseDatabase/FirebaseConfig";
+import { getGameStart } from "../FirebaseDatabase/FirebaseConfig";
 import { useLocation, useNavigate } from "react-router-dom";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
+import ClearLocalStorage from "../Utilities/ClearLocalStorage";
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -11,6 +12,7 @@ export default function WaitingRoom() {
   const [gameStart, setGameStart] = useState('waiting');
   useEffect(() => {
     getGameStart(data.game.gamecode, setGameStart);
+    ClearLocalStorage()
   }, []);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function WaitingRoom() {
   }, [gameStart]);
 
   function handleLeaveWebsite(){
-    leaveGame(data.game.gamecode!, data.username);
+    // leaveGame(data.game.gamecode!, data.username);
   };
   return (
     <>

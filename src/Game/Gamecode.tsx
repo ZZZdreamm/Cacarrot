@@ -20,7 +20,9 @@ export default function Gamecode() {
     players: [],
     gamecode: state.gamecode,
     started: 'waiting',
-    currentQuestion:0
+    currentQuestion:0,
+    time:state.template.questionTime,
+    gamePhase:1
   });
   // const [game, setGame] = useState<Game | null>(null);
   const [startDisabled, setStartDisabled] = useState(true);
@@ -35,45 +37,38 @@ export default function Gamecode() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchGame = async () => {
       const snapshot = await gamesRef.child(state.gamecode).once("value");
       const fetchedData = snapshot.val();
+
+      let transformedData: Game = {
+        gameTemplate: state.template,
+        players: [],
+        gamecode: state.gamecode,
+        started: 'waiting',
+        currentQuestion: 0,
+        time:state.template.questionTime,
+        gamePhase:1
+      }
       if (fetchedData) {
-      console.log('what')
-
-        let transformedData: Game = {
-          gameTemplate: state.template,
-          players: [],
-          gamecode: state.gamecode,
-          started: 'waiting',
-          currentQuestion: 1
-        }
-
-          const {gameTemplate, gamecode, players, started, currentQuestion} = fetchedData
-          let myPlayers : any = []
-          if(players){
-            Object.values(players).forEach((player:any) => {
-              const {id, name, points, lastAnswer} = player
-              const newPlayer: Player = {id:id, name:name, points:points, lastAnswer:lastAnswer}
-              myPlayers.push(newPlayer)
-            })
-          }
-          transformedData = {gameTemplate:gameTemplate, gamecode:gamecode, players:myPlayers, started:started, currentQuestion:currentQuestion}
+          const {gameTemplate, gamecode, players, started, currentQuestion, time, gamePhase} = fetchedData
+          let myPlayers : any = players ? Object.values(players).map((player:any) => {
+            const {id, name, points, lastAnswer, shownComponent} = player??{}
+            const newPlayer: Player = {id, name, points, lastAnswer, shownComponent}
+            return newPlayer
+          }) : []
+          transformedData = {gameTemplate, gamecode, players:myPlayers, started, currentQuestion, time, gamePhase}
         setGame(transformedData);
       } else {
-        const newData = {
-          gameTemplate: state.template,
-          players: [],
-          gamecode: state.gamecode,
-          started: 'waiting',
-          currentQuestion:1
-        };
-        await createGameInDB(newData)
+        await createGameInDB(transformedData)
       }
     };
-    fetchData()
+    fetchGame()
+
     getGameData(game!.gamecode, setGame);
   }, []);
+
+
 
 
 

@@ -1,0 +1,2 @@
+2. zapisywanie w local storage
+3. sprawic aby sie nie inkrementowal na starcie question index

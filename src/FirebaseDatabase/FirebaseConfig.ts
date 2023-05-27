@@ -33,7 +33,7 @@ export async function getUserTemplates(userId:string, callback:any){
     const userData = snapshot.val()
     let templates : GameTemplate[] = []
     Object.values(userData).forEach((value : any) => {
-      const {allQuestions, id, questionTime, templateName} = value
+      const {allQuestions, id, questionTime, templateName} = value??{}
       const template : GameTemplate = {
         allQuestions:allQuestions,
         id:id,
@@ -81,27 +81,33 @@ export async function checkIfGamecodeIsInDB(inputtedGamecode:string, setGoodCode
   })
 }
 
-export async function getGameData(gamecode:string, setGame:any) {
+export async function getGameData(gamecode:string, setGame:any, turnOffAfter?:boolean) {
   gamesRef.child(gamecode).on('value', (dataSnapshot) => {
     const gameData = dataSnapshot.val()
     let transformedData = {}
     if(gameData){
-      const {gameTemplate, gamecode, players, started, currentQuestion} = gameData
+      const {gameTemplate, gamecode, players, started, currentQuestion, gamePhase, time} = gameData??{}
       let myPlayers : any = []
       if(players){
         Object.values(players).forEach((player:any) => {
-          const {id, name, points, lastAnswer} = player
+          const {id, name, points, lastAnswer, shownComponent} = player??{}
           if(lastAnswer){
-            const newPlayer: Player = {id:id, name:name, points:points, lastAnswer:lastAnswer}
+            const newPlayer: Player = {id, name, points, lastAnswer, shownComponent}
             myPlayers.push(newPlayer)
           }else{
-            const newPlayer: Player = {id:id, name:name, points:points, lastAnswer:{choosenAnswer:'', sendingTime:0, questionNumber:1}}
-            myPlayers.push(newPlayer)
+            const newPlayer: Player = {id, name, points, lastAnswer:{choosenAnswer:'', sendingTime:0, questionNumber:1}, shownComponent:'answers'}
+            myPlayers?.push(newPlayer)
           }
         })
       }
-      transformedData = {gameTemplate:gameTemplate, gamecode:gamecode, players:myPlayers, started:started, currentQuestion:currentQuestion}
+      transformedData = {gameTemplate, gamecode, players:myPlayers, started, currentQuestion, gamePhase, time}
+      // console.log(transformedData)
       setGame(transformedData)
+      // if(turnOffAfter){
+      //   console.log('sd')
+      //   gamesRef.child(gamecode).off()
+      // }
+
     }
   })
 }
@@ -116,33 +122,32 @@ export async function joinGame(gamecode:string, player:Player) {
     gamesRef.child(gamecode).child('players').once('value', (snapshot) =>{
       const players = snapshot.val()
       var playersCount = players ? Object.keys(players).length : 0
-      player.id = playersCount+1
-      console.log(player.id)
-      gamesRef.child(gamecode).child('players').child(`${player.id}`).set(player)
+      // console.log(player.id)
+      gamesRef.child(gamecode).child('players').child(`${playersCount}`).set(player)
     })
 }
-export async function leaveGame(gamecode:string, playerName:string) {
-  gamesRef.child(gamecode).child('players').once('value', (snapshot) =>{
-      const players = snapshot.val()
-      players.forEach((player:Player) => {
-          if(player.name == playerName){
-            gamesRef.child(gamecode).child('players').child(`${player.id}`).remove()
-          }
-      });
-  })
-}
+// export async function leaveGame(gamecode:string, playerName:string) {
+//   gamesRef.child(gamecode).child('players').once('value', (snapshot) =>{
+//       const players = snapshot.val()
+//       players.forEach((player:Player) => {
+//           if(player.name == playerName){
+//             gamesRef.child(gamecode).child('players').child(`${player.id}`).remove()
+//           }
+//       });
+//   })
+// }
 
 export async function getGameStart(gamecode:string, setGameStart:any){
   gamesRef.child(gamecode).child('started').on('value', (snapshot) => {
       const data = snapshot.val()
-      console.log(data)
+      // console.log(data)
       setGameStart(data)
   })
 }
 
 
 export async function setGameStarted(gamecode:string, value:string) {
-  console.log(value)
+  // console.log(value)
   gamesRef.child(gamecode).child('started').set(value)
 }
 
@@ -151,13 +156,34 @@ export async function sendAnswerToDB(gamecode:string, playerName:string, answer:
       const players = snapshot.val()
       players.forEach((player:Player) => {
         if(player.name == playerName){
-          gamesRef.child(gamecode).child('players').child(`${player.id-1}`).child('lastAnswer').set({choosenAnswer:answer, sendingTime:sendingTime, questionNumber:currentQuestion})
+          gamesRef.child(gamecode).child('players').child(`${player.id}`).child('lastAnswer').set({choosenAnswer:answer, sendingTime:sendingTime, questionNumber:currentQuestion})
         }
       });
   })
 }
 
+export async function checkIfAnswerSended(gamecode:string, playerName:string, setAnswerSended: (e:any) => void) {
+  await gamesRef.child(gamecode).child('players').once('value', (snapshot) => {
+    const players = snapshot.val()
+    players.forEach((player:Player) => {
+      if(player.name == playerName){
+        gamesRef.child(gamecode).child('currentQuestion').once('value', (snapshot) => {
+          const currentQuestion = snapshot.val()
+          gamesRef.child(gamecode).child('players').child(`${player.id}`).child('lastAnswer').once('value', (snapshot) => {
+            const lastAnswer = snapshot.val()
+            if(currentQuestion == lastAnswer.questionNumber){
+
+            }
+          })
+        })
+
+      }
+    });
+})
+}
+
 export async function setCurrentQuestionInDB(gamecode:string, questionNumber:number) {
+  console.log()
   gamesRef.child(gamecode).child('currentQuestion').set(questionNumber)
 }
 
@@ -172,6 +198,7 @@ export async function getQuestionsDoneFromDB(gamecode:string, setCurrentQuestion
 export async function getCurrentQuestionFromDB(gamecode:string, setCurrentQuestion:any) {
   gamesRef.child(gamecode).child('currentQuestion').on('value', (snapshot) => {
     const currentQuestion = snapshot.val()
+    // console.log(`current question gotten ${currentQuestion}`)
     setCurrentQuestion(currentQuestion)
   })
 }
@@ -181,8 +208,46 @@ export async function setPointsForPlayer(gamecode:string, playerName:string, poi
     const players = snapshot.val()
     players.forEach((player:Player) => {
       if(player.name == playerName){
-        gamesRef.child(gamecode).child('players').child(`${player.id-1}`).child('points').set(points)
+        gamesRef.child(gamecode).child('players').child(`${player.id}`).child('points').set(points)
       }
     });
 })
+}
+
+
+export async function setTimeInDB(gamecode:string, time:number) {
+  gamesRef.child(gamecode).child('time').set(time)
+}
+
+export async function getTimeFromDB(gamecode:string, setTime:any) {
+  gamesRef.child(gamecode).child('time').on('value', (snapshot) => {
+    const time = snapshot.val()
+    if(time != null){
+      setTime(time)
+    }
+  })
+}
+
+export async function getPlayer(gamecode:string, playerName:string, setPlayer:any) {
+  gamesRef.child(gamecode).child('players').once('value', (snapshot) => {
+    const players = snapshot.val()
+    players.forEach((player:Player) => {
+      if(player.name == playerName){
+        setPlayer(player)
+      }
+    });
+})
+}
+
+export async function setShownComponentInDB(gamecode:string, shownComponent:string, playerId:number) {
+  gamesRef.child(gamecode).child('players').child(`${playerId}`).child('shownComponent').set(shownComponent)
+}
+
+export async function getOnShownComponent(gamecode:string, playerId:number, setShownComponent: (e:any) => void) {
+   gamesRef.child(gamecode).child('players').child(`${playerId}`).child('shownComponent').on('value', (snapshot) => {
+    const shownComponent = snapshot.val()
+    if(shownComponent){
+      setShownComponent(shownComponent)
+    }
+   })
 }

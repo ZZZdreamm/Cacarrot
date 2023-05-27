@@ -7,7 +7,7 @@ export default function Timer({time, setTime, bonusStyling}){
             if (time > 0) {
               setTime((timee:any) => timee - 1);
             }
-          }, 1000);
+          }, 1200);
           return () => clearInterval(intervalId);
     },[time])
     return(

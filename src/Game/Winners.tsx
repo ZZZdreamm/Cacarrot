@@ -5,7 +5,6 @@ import { Player } from "./game.models";
 //@ts-ignore
 export default function Winners({ winners }) {
   const navigate = useNavigate();
-  console.log(winners)
   return (
     <>
       <div

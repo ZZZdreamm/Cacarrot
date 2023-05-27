@@ -13,7 +13,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     function handleResize() {
-      console.log("resized to: ", window.innerWidth, "x", window.innerHeight);
+      // console.log("resized to: ", window.innerWidth, "x", window.innerHeight);
       setWindowSize(window.innerWidth);
     }
 
@@ -21,7 +21,6 @@ export default function LandingPage() {
   },[]);
 
   useEffect(() => {
-    console.log("asd");
     setWindowSize(window.innerWidth);
   }, [window.innerWidth]);
 
@@ -41,7 +40,8 @@ export default function LandingPage() {
       {showHosting && (
         <>
           <h1>Cacarrot</h1>
-          <p className="paragraph">
+          <div className="paragraph">
+          {/* changed from p to div */}
             <Authorized
               isAuthorized={
                 <button
@@ -62,7 +62,7 @@ export default function LandingPage() {
                 </>
               }
             />
-          </p>
+          </div>
         </>
       )}
 
