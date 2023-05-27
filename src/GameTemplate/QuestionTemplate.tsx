@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ReadyImagesURL } from "../appUrls";
+import { ReadyImagesURL } from "../../appUrls";
 import { Question } from "./questions.models";
 
 //@ts-ignore

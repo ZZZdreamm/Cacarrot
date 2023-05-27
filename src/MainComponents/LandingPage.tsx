@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import Authorized from "./auth/Authorized";
-import MyInput from "./Utilities/MyInput";
+import Authorized from "../auth/Authorized";
+import MyInput from "../Utilities/MyInput";
 import { useEffect, useState } from "react";
-import { checkIfGamecodeIsInDB } from "./FirebaseDatabase/GamesInDB";
+import { checkIfGamecodeIsInDB } from "../FirebaseDatabase/GamesInDB";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ export default function LandingPage() {
 
   useEffect(() => {
     function handleResize() {
-      // console.log("resized to: ", window.innerWidth, "x", window.innerHeight);
       setWindowSize(window.innerWidth);
     }
 
@@ -39,7 +38,6 @@ export default function LandingPage() {
         <>
           <h1>Cacarrot</h1>
           <div className="paragraph">
-          {/* changed from p to div */}
             <Authorized
               isAuthorized={
                 <button

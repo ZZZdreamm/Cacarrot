@@ -1,6 +1,6 @@
 const websiteURL = `https://facebugapi.azurewebsites.net`
 const localURL =  `https://localhost:7064`
-// `https://facebugapi.azurewebsites.net`
+
 let baseURL = websiteURL
 if (process.env.NODE_ENV == `development`){
     baseURL = localURL
@@ -15,4 +15,3 @@ export const urlPosts = `${baseURL}/api/posts`;
 export const urlComments = `${baseURL}/api/comments`;
 export const urlFriends = `${baseURL}/api/friends`;
 export const urlMessages = `${baseURL}/api/messages`;
-// export const ReadyImagesURL = `${process.env.PUBLIC_URL}`

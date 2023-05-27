@@ -6,7 +6,7 @@ import { claim } from "./auth/auth.models";
 import { getClaims } from "./auth/HandleJWT";
 import AuthenticationContext from "./auth/AuthenticationContext";
 import { ModalProvider } from "styled-react-modal";
-import Menu from "./components/Menu";
+import Menu from "./MainComponents/Menu";
 import UnloadPrompt from "./Utilities/UnloadPrompt";
 import { Socket } from "socket.io";
 import { io } from "socket.io-client";
