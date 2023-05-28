@@ -8,10 +8,10 @@ import {
   setDataInDB,
 } from "../FirebaseDatabase/GamesInDB";
 import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
+import { fetchGame, startGame } from "./FunctionsGame";
 
 export default function Gamecode() {
   const location = useLocation();
-  //@ts-ignore
   const { state } = location;
   const navigate = useNavigate();
 
@@ -26,51 +26,11 @@ export default function Gamecode() {
   });
 
   const [startDisabled, setStartDisabled] = useState(true);
-  function startGame() {
-    if (game!.players.length >= 1) {
-      setGame({
-        ...game!,
-        started: 'started',
-      });
-      setDataInDB(game.gamecode, 'started', 'gameStarted')
-    }
-  }
 
   useEffect(() => {
-    const fetchGame = async () => {
-      const snapshot = await gamesRef.child(state.gamecode).once("value");
-      const fetchedData = snapshot.val();
-
-      let transformedData: Game = {
-        gameTemplate: state.template,
-        players: [],
-        gamecode: state.gamecode,
-        started: 'waiting',
-        currentQuestion: 0,
-        time:state.template.questionTime,
-        gamePhase:1
-      }
-      if (fetchedData) {
-          const {gameTemplate, gamecode, players, started, currentQuestion, time, gamePhase} = fetchedData
-          let myPlayers : any = players ? Object.values(players).map((player:any) => {
-            const {id, name, points, lastAnswer, shownComponent} = player??{}
-            const newPlayer: Player = {id, name, points, lastAnswer, shownComponent}
-            return newPlayer
-          }) : []
-          transformedData = {gameTemplate, gamecode, players:myPlayers, started, currentQuestion, time, gamePhase}
-        setGame(transformedData);
-      } else {
-        await createGameInDB(transformedData)
-      }
-    };
-    fetchGame()
-
+    fetchGame(state, setGame)
     getGameData(game!.gamecode, setGame);
   }, []);
-
-
-
-
 
 
   useEffect(() => {
@@ -85,6 +45,7 @@ export default function Gamecode() {
       navigate(`/game-host/${game.gamecode}`, { state: gameProps });
     }
   }, [game]);
+  
   return (
     <div className="column-shaped-container">
       {game && (
@@ -102,7 +63,7 @@ export default function Gamecode() {
           <button
             disabled={startDisabled}
             className="start-game-btn"
-            onClick={startGame}
+            onClick={() => startGame(game, setGame)}
           >
             Start game
           </button>

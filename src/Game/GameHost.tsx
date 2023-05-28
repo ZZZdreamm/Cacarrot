@@ -12,6 +12,7 @@ import {
   setDataInDB
 } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
+import { getWinners } from "./FunctionsGame";
 
 export default function GameHost() {
   const location = useLocation();
@@ -45,7 +46,6 @@ export default function GameHost() {
     if (gamecode) {
       fetchData(gamecode, time, setTime, "time");
       fetchData(gamecode, gamePhase, setGamePhase, "gamePhase");
-      // nie tu
       fetchData(gamecode, 0, setCurrentQuestionIndex, "currentQuestionIndex");
       getGameData(gamecode, setGame, true);
     }
@@ -55,7 +55,7 @@ export default function GameHost() {
     if (gamePhase) {
       if (gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
         setDataInDB(game.gamecode, "winners", 'gameStarted');
-        getWinners();
+        getWinners(players, setWinners);
       } else if (gamePhase % 2 == 0) {
         setShownComponent("statistics");
       } else if (gamePhase % 2 == 1) {
@@ -100,13 +100,6 @@ export default function GameHost() {
     }
   }, [winners]);
 
-  function getWinners() {
-    let localWinners = players.sort(
-      (player1, player2) => player2.points - player1.points
-    );
-    setWinners([localWinners[0], localWinners[1], localWinners[2]]);
-  }
-
   useEffect(() => {
     getGameData(game.gamecode, setGame, false);
   }, []);
@@ -142,7 +135,7 @@ export default function GameHost() {
           )}
           {shownComponent == "statistics" && (
             <Statistics
-              time={time}
+              time={time!}
               setTime={setTime}
               players={players}
               setPlayers={setPlayers}

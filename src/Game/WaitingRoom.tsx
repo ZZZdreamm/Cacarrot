@@ -6,7 +6,6 @@ import ClearLocalStorage from "../Utilities/ClearLocalStorage";
 
 export default function WaitingRoom() {
   const location = useLocation();
-  //@ts-ignore{
   const data = location.state;
   const navigate = useNavigate();
   const [gameStart, setGameStart] = useState('waiting');
@@ -17,17 +16,16 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     if (gameStart == 'started') {
-      const sendState = { game: data.game, username: data.username };
+      const playerNumber = data.game.players.length
+      const sendState = { game: data.game, username: data.username, playerNumber: playerNumber };
+      localStorage.setItem(`username/${playerNumber}`, data.username)
       navigate(`/game-player/${data.game.gamecode}`, { state: sendState });
     }
   }, [gameStart]);
 
-  function handleLeaveWebsite(){
-    // leaveGame(data.game.gamecode!, data.username);
-  };
   return (
     <>
-      <UnloadPrompt handleLeaveWebiste={handleLeaveWebsite} />
+      <UnloadPrompt/>
       <div style={{ fontSize: "2em", alignItems:'center', justifyContent:'center', padding:'20px' }}>Wait for start of game...</div>
     </>
   );

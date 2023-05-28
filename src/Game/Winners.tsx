@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { ReadyImagesURL } from "../appUrls";
 import { Player } from "./game.models";
+import SingleWinner from "./SingleWinners";
 
-//@ts-ignore
-export default function Winners({ winners }) {
+export default function Winners({ winners }: WinnersProps) {
   const navigate = useNavigate();
+  const winnersToMap = [{name:winners[0].name, points: winners[0].points, statsColor:"#ffd700"},
+  {name:winners[1] ? winners[1].name : null, points: winners[1] ? winners[1].points : 0, statsColor:"#C0C0C0"},
+  {name:winners[2] ? winners[2].name : null, points: winners[2] ? winners[2].points : 0, statsColor:"#CD7F32"}
+]
   return (
     <>
       <div
@@ -12,40 +16,9 @@ export default function Winners({ winners }) {
         style={{ margin: "10% 0 0 0", maxHeight: "40%"}}
       >
         <h1>Winners</h1>
-        <div className="player-stats" style={{ backgroundColor: "#ffd700" }}>
-          <div className="img-name-container" style={{ height: "100%" }}>
-            <img
-              className="winners-image"
-              src={`${ReadyImagesURL}/first-place.png`}
-            />
-            <span>{winners[0].name}</span>
-          </div>
-          <span  style={{marginLeft:'2rem'}}>Score: {winners[0].points}</span>
-        </div>
-        {winners[1] && (
-          <div className="player-stats" style={{ backgroundColor: "#C0C0C0" }}>
-            <div className="img-name-container" style={{ height: "100%" }}>
-              <img
-                className="winners-image"
-                src={`${ReadyImagesURL}/second-place.jpg`}
-              />
-              <span>{winners[1].name}</span>
-            </div>
-            <span>Score: {winners[1].points}</span>
-          </div>
-        )}
-        {winners[2] && (
-          <div className="player-stats" style={{ backgroundColor: "#CD7F32" }}>
-            <div className="img-name-container" style={{ height: "100%" }}>
-              <img
-                className="winners-image"
-                src={`${ReadyImagesURL}/third-place.jpg`}
-              />
-              <span>{winners[2].name}</span>
-            </div>
-            <span>Score: {winners[2].points}</span>
-          </div>
-        )}
+        {winnersToMap.map((winner) =>(
+          winner.name && <SingleWinner name={winner.name} points={winner.points} statsColor={winner.statsColor}/>
+        ))}
 
         <button
           style={{ marginTop: "10%" }}
@@ -58,4 +31,9 @@ export default function Winners({ winners }) {
       </div>
     </>
   );
+}
+
+
+interface WinnersProps{
+  winners:Player[];
 }

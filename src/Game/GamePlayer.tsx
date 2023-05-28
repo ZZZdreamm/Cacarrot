@@ -9,7 +9,7 @@ import {
   sendAnswerToDB,
   setPointsForPlayer,
   fetchData,
-  setDataInDB
+  setDataInDB,
 } from "../FirebaseDatabase/GamesInDB";
 import { useFetcher, useLocation } from "react-router-dom";
 import { Answer, Game, Player } from "./game.models";
@@ -18,12 +18,13 @@ import Statistics from "./Statistics";
 import Winners from "./Winners";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import BetweenQuestions from "./BetweenQuestions";
+import { getWinners } from "./FunctionsGame";
 
 export default function GamePlayer() {
   const location = useLocation();
   //@ts-ignore
   const { state } = location;
-//   const [gameState, setGameState] = useState()
+  //   const [gameState, setGameState] = useState()
   const [game, setGame] = useState<Game>(state.game);
   const [time, setTime] = useState(state.game.gameTemplate.questionTime);
   const [shownComponent, setShownComponent] = useState<string | null>(null);
@@ -32,120 +33,136 @@ export default function GamePlayer() {
   const [winners, setWinners] = useState<Player[]>([]);
   const [points, setPoints] = useState<number>(0);
 
-  const [playerName, setPlayerName] = useState('')
-  const [player, setPlayer] = useState<Player>()
-  const [lastQuestionPoints, setLastQuestionPoints] = useState(0)
-  const [lastAnswer, setLastAnswer] = useState<Answer>()
+  const [playerName, setPlayerName] = useState("");
+  const [player, setPlayer] = useState<Player>();
+  const [lastQuestionPoints, setLastQuestionPoints] = useState(0);
+  const [lastAnswer, setLastAnswer] = useState<Answer>();
 
-  const [gameStart, setGameStart] = useState<string>('started')
-
-
+  const [gameStart, setGameStart] = useState<string>("started");
+  const [minusPointsForSecond, setMinusPointsForSecond] = useState(0);
 
   useEffect(() => {
     getGameData(state.game.gamecode, setGame);
-    const getName = state.username ? state.username : localStorage.getItem('username')
-    setPlayerName(getName)
-    getTimeFromDB(game?.gamecode, setTime)
-    getGameStart(game.gamecode, setGameStart)
+    const getName = state.username
+      ? state.username
+      : localStorage.getItem(`username/${state.playerNumber}`);
+    setPlayerName(getName);
+    getTimeFromDB(game?.gamecode, setTime);
+    getGameStart(game.gamecode, setGameStart);
   }, []);
 
-  useEffect(()=>{
-    if(lastAnswer && (game.currentQuestion || game.currentQuestion == 0)){
-      if(game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer == lastAnswer.choosenAnswer && game.currentQuestion == lastAnswer.questionNumber){
-        setLastQuestionPoints(1000 - 100*lastAnswer.sendingTime)
+  useEffect(() => {
+    if (lastAnswer && (game.currentQuestion || game.currentQuestion == 0)) {
+      if (
+        game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer ==
+          lastAnswer.choosenAnswer &&
+        game.currentQuestion == lastAnswer.questionNumber
+      ) {
+        setLastQuestionPoints(
+          1000 - minusPointsForSecond * lastAnswer.sendingTime
+        );
       }
     }
-  },[lastAnswer, game.currentQuestion])
+  }, [lastAnswer, game.currentQuestion]);
 
-  useEffect(()=>{
-    if(game.gamecode && playerName){
-      if(!player){
-        getPlayer(game.gamecode, playerName, setPlayer)
+  useEffect(() => {
+    if (game.gamecode && playerName) {
+      setMinusPointsForSecond(
+        Math.round(1000 / game.gameTemplate.questionTime)
+      );
+      if (!player) {
+        getPlayer(game.gamecode, playerName, setPlayer);
       }
-      if(player){
-        fetchData(game.gamecode, players, setPlayers, 'players')
-        fetchData(game.gamecode, questionDone, setQuestionDone, 'questionDone')
-        fetchData(game.gamecode, points, setPoints, 'points', player.id)
-        fetchData(game.gamecode, shownComponent, setShownComponent, 'shownComponent', player.id)
-        fetchData(game.gamecode, time, setTime, 'time')
-        fetchData(game.gamecode, lastAnswer, setLastAnswer, 'lastAnswer', player.id)
-        getOnShownComponent(game.gamecode, player.id, setShownComponent)
+      if (player) {
+        fetchData(game.gamecode, players, setPlayers, "players");
+        fetchData(game.gamecode, questionDone, setQuestionDone, "questionDone");
+        fetchData(game.gamecode, points, setPoints, "points", player.id);
+        fetchData(
+          game.gamecode,
+          shownComponent,
+          setShownComponent,
+          "shownComponent",
+          player.id
+        );
+        fetchData(game.gamecode, time, setTime, "time");
+        fetchData(
+          game.gamecode,
+          lastAnswer,
+          setLastAnswer,
+          "lastAnswer",
+          player.id
+        );
+        getOnShownComponent(game.gamecode, player.id, setShownComponent);
       }
     }
-  },[game.gamecode, playerName, player])
+  }, [game.gamecode, playerName, player]);
 
   useEffect(() => {
     if (time < 1) {
-      setTimeout(() => {
-        if(game.gamePhase == game.gameTemplate.allQuestions.length*2){
-          getWinners()
-          setShownComponent("winners");
-        }
-        else if (shownComponent == "answers" && game.gamePhase%2 == 1) {
-          setShownComponent("between");
-        } else if (
-          shownComponent == "between" &&
-          questionDone < state.game.gameTemplate.allQuestions.length
-          && game.gamePhase%2 == 0
-        ) {
-          setShownComponent("answers");
-        }
-      }, 500);
+      if (game.gamePhase == game.gameTemplate.allQuestions.length * 2) {
+        getWinners(players!, setWinners);
+        setShownComponent("winners");
+      } else if (shownComponent == "answers" && game.gamePhase % 2 == 1) {
+        setShownComponent("between");
+      } else if (
+        shownComponent == "between" &&
+        questionDone < state.game.gameTemplate.allQuestions.length &&
+        game.gamePhase % 2 == 0
+      ) {
+        setShownComponent("answers");
+      }
     }
-
   }, [time]);
 
   useEffect(() => {
     setPlayers(game?.players!);
   }, [game?.players]);
 
-
   useEffect(() => {
-    if (game?.started == 'winners') {
-        getWinners()
+    if (game?.started == "winners") {
+      getWinners(players!, setWinners);
       setShownComponent("winners");
     }
   }, [game?.started]);
 
-  function getWinners() {
-    //@ts-ignore
-    let localWinners = game.players.sort(
-      (player1, player2) => player2.points - player1.points
-    );
-    setWinners([localWinners[0], localWinners[1], localWinners[2]]);
-  }
-
-  useEffect(()=>{
-    if(player && shownComponent){
-      setDataInDB(game.gamecode, shownComponent, 'shownComponent', player?.id)
+  useEffect(() => {
+    if (player && shownComponent) {
+      setDataInDB(game.gamecode, shownComponent, "shownComponent", player?.id);
     }
-  },[shownComponent])
+  }, [shownComponent]);
 
-  function setPointsGivenLast(answer:Answer){
-    if(game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer == answer.choosenAnswer && game.currentQuestion == answer.questionNumber){
-        setPoints((points) => {
-            const newPoints = 1000 - 100*answer.sendingTime
-            setLastQuestionPoints(newPoints)
-            setPoints(points + newPoints)
-            setPointsForPlayer(game.gamecode, state.username, points+newPoints);
-            return (points+newPoints)
-        })
+  function setPointsGivenLast(answer: Answer) {
+    if (
+      game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer ==
+        answer.choosenAnswer &&
+      game.currentQuestion == answer.questionNumber
+    ) {
+      setPoints((points) => {
+        const newPoints = 1000 - minusPointsForSecond * answer.sendingTime;
+        setLastQuestionPoints(newPoints);
+        setPoints(points + newPoints);
+        setPointsForPlayer(game.gamecode, state.username, points + newPoints);
+        return points + newPoints;
+      });
     }
   }
 
   return (
     <>
-    <UnloadPrompt/>
-      {shownComponent == "answers" && gameStart == 'started' && (
+      <UnloadPrompt />
+      {shownComponent == "answers" && gameStart == "started" && (
         <AnswerPage
           gameState={game}
           time={time}
           setTime={setTime}
           setShownComponent={setShownComponent}
           username={state.username}
-          setPointsForLast={setPointsGivenLast} lastAnswer={lastAnswer} setLastAnswer={setLastAnswer}        />
+          setPointsForLast={setPointsGivenLast}
+          lastAnswer={lastAnswer}
+          setLastAnswer={setLastAnswer}
+        />
       )}
-      {shownComponent == "between" && gameStart == 'started'  && (
+      {shownComponent == "between" && gameStart == "started" && (
         <BetweenQuestions
           gameState={game}
           player={player}
@@ -159,7 +176,9 @@ export default function GamePlayer() {
           setLastQuestionPoints={setLastQuestionPoints}
         />
       )}
-      {shownComponent == "winners" && gameStart == 'winners' && <Winners winners={winners} />}
+      {shownComponent == "winners" && gameStart == "winners" && (
+        <Winners winners={winners} />
+      )}
     </>
   );
 }

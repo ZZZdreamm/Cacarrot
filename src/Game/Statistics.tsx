@@ -3,10 +3,8 @@ import Timer from "../Utilities/Timer";
 import PlayerStats from "./PlayerStats";
 import { Player } from "./game.models";
 
-//@ts-ignore
-export default function Statistics({ time, setTime, players, setPlayers }) {
+export default function Statistics({ time, setTime, players, setPlayers }:StatisticsProps) {
   useEffect(()=>{
-    //@ts-ignore
     setPlayers(players.sort((player1, player2) => player2.points - player1.points))
   },[])
   return (
@@ -24,4 +22,11 @@ export default function Statistics({ time, setTime, players, setPlayers }) {
       </div>
     </>
   );
+}
+
+interface StatisticsProps{
+  time:Number;
+  setTime:(time:number)=>void;
+  players:Player[];
+  setPlayers:(players:Player[])=>void;
 }

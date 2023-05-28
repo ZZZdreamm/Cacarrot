@@ -21,7 +21,6 @@ export default function CreateGame() {
   },[])
 
 
-
   useEffect(()=>{
     setChoosenTemplate(templates[0])
   },[templates])
@@ -32,7 +31,6 @@ export default function CreateGame() {
   }
   function generateCode() {
     let code = "";
-
     for (let i = 0; i < 6; i++) {
       var randomNumber = randomNumberInRange(0, 9)
       code += `${randomNumber}`
@@ -50,7 +48,7 @@ export default function CreateGame() {
           <button
             className="my-button"
             onClick={(e:any)=>{toggleModal(e, isOpen, setIsOpen)}}
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "100%", aspectRatio:'1'}}
           >
             Choose game template
           </button>
@@ -84,7 +82,7 @@ export default function CreateGame() {
           <button
             className="my-button"
             onClick={(e:any)=>{toggleModal(e, isOpen2, setIsOpen2)}}
-            style={{ height: "100%", width: "100%", aspectRatio:'1' }}
+            style={{ height: "100%", aspectRatio:'1' }}
           >
             Edit game templates
           </button>

@@ -3,12 +3,11 @@ import QuestionTemplate from "./QuestionTemplate";
 import MyModal from "../Utilities/Modal";
 import MyInput from "../Utilities/MyInput";
 import { Question } from "./questions.models";
-import { GameTemplate } from "../Game/game.models";
-import { saveTemplateInDB } from "../FirebaseDatabase/TemplatesInDB";
 import { useLocation, useNavigate } from "react-router-dom";
-import SlideTemplate from "./SlideTemplate";
-import { addItemToState } from "../Utilities/StateModifications";
 import { removeItemFromState } from "../Utilities/StateModifications";
+import TemplateRightBar from "./TemplateRightBar";
+import TemplateLeftBar from "./TemplateLeftBar";
+import { saveTemplate } from "./TemplateFunctions";
 
 export default function EditTemplate() {
   const location = useLocation();
@@ -25,44 +24,17 @@ export default function EditTemplate() {
 
   const [questionTime, setQuestionTime] = useState(gameTemplate.questionTime);
   const [templateName, setTemplateName] = useState(gameTemplate.templateName);
-  const [error, setError] = useState('')
+  const [error, setError] = useState("");
 
   const timesForAnswer = [5, 10, 20, 30, 40];
 
-  function saveTemplate() {
-    const userId = localStorage.getItem("id");
-    let validQuestions: Question[] = [];
-    questions.forEach((question) => {
-      if (validateQuestion(question)) {
-        validQuestions.push(question);
-      }
-    });
-    const newGameTemplate: GameTemplate = {
-      id: gameTemplate.id,
-      templateName: templateName,
-      allQuestions: validQuestions,
-      questionTime: questionTime,
-    };
-    if(validQuestions.length < 1){
-      setError('You have to have at least 1 full question!')
+  function submitTemplate(){
+    const saved = saveTemplate(questions, templateName, questionTime);
+    if(saved){
+      navigate('/create')
     }else{
-      saveTemplateInDB(userId!, newGameTemplate);
-      navigate("/create");
+      setError("You have to have at least 1 full question!");
     }
-  }
-
-  function validateQuestion(question: Question) {
-    if (
-      question.answerA &&
-      question.answerB &&
-      question.answerC &&
-      question.answerD &&
-      question.question &&
-      question.correctAnswer
-    ) {
-      return true;
-    }
-    return false;
   }
 
   const deleteQuestion = async (slideNumber: number) => {
@@ -79,81 +51,43 @@ export default function EditTemplate() {
 
   return (
     <main className="question-placeholder">
-      <div className="bar question-bar">
-        {questions && questions.map((question, index) => (
-          <SlideTemplate
-            key={question.questionNumber}
-            slideNumber={index + 1}
-            questions={questions}
-            setQuestions={setQuestions}
-            choosenQuestion={choosenQuestion}
-            setChoosenQuestion={setChoosenQuestion}
-            removeSlide={() => {
-              deleteQuestion(index + 1);
-            }}
-          ></SlideTemplate>
-        ))}
-        <button
-          onClick={() => {
-            addItemToState(
-              {
-                questionNumber: questions.length + 1,
-                question: "",
-                answerA: "",
-                answerB: "",
-                answerC: "",
-                answerD: "",
-                correctAnswer: "",
-              },
-              setQuestions
-            );
-          }}
-        >
-          Add question
-        </button>
-      </div>
+      <TemplateLeftBar
+        questions={questions}
+        setQuestions={setQuestions}
+        choosenQuestion={choosenQuestion}
+        setChoosenQuestion={setChoosenQuestion}
+        deleteQuestion={deleteQuestion}
+      />
       <QuestionTemplate
         question={questions[choosenQuestion - 1]}
         questionNumber={choosenQuestion}
         setQuestions={setQuestions}
       />
-      <div className="bar right-bar">
-        <button onClick={toggleModal}>Save template</button>
-        <MyModal
-          isOpen={isOpen}
-          toggleModal={toggleModal}
-          children={
-            <div style={{width:'100%', height:'100%', textAlign:'center'}}>
-              <h2>Template name</h2>
-              <MyInput
-                value={templateName}
-                setValue={setTemplateName}
-                placeholder={"Enter template name"}
-                characterLimit={20}
-                visibleWarning={true}
-              />
-              {error && <span className="error">{error}</span>}
-            </div>
-          }
-          submitButtonText={"Save template"}
-          onSubmit={() => {
-            saveTemplate();
-          }}
-        />
-        <label>Time for answer</label>
-        <select
-          value={questionTime}
-          onChange={(event) => {
-            setQuestionTime(parseInt(event.target.value));
-          }}
-        >
-          {timesForAnswer.map((time) => (
-            <option key={time} value={time}>
-              {time} sec
-            </option>
-          ))}
-        </select>
-      </div>
+      <TemplateRightBar
+        toggleModal={toggleModal}
+        questionTime={questionTime}
+        setQuestionTime={setQuestionTime}
+        timesForAnswer={timesForAnswer}
+      />
+      <MyModal
+        isOpen={isOpen}
+        toggleModal={toggleModal}
+        children={
+          <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+            <h2>Template name</h2>
+            <MyInput
+              value={templateName}
+              setValue={setTemplateName}
+              placeholder={"Enter template name"}
+              characterLimit={20}
+              visibleWarning={true}
+            />
+            {error && <span className="error">{error}</span>}
+          </div>
+        }
+        submitButtonText={"Save template"}
+        onSubmit={submitTemplate}
+      />
     </main>
   );
 }
