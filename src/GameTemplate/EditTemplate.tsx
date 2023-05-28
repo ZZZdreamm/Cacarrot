@@ -25,6 +25,7 @@ export default function EditTemplate() {
 
   const [questionTime, setQuestionTime] = useState(gameTemplate.questionTime);
   const [templateName, setTemplateName] = useState(gameTemplate.templateName);
+  const [error, setError] = useState('')
 
   const timesForAnswer = [5, 10, 20, 30, 40];
 
@@ -42,8 +43,12 @@ export default function EditTemplate() {
       allQuestions: validQuestions,
       questionTime: questionTime,
     };
-    saveTemplateInDB(userId!, newGameTemplate);
-    navigate("/create");
+    if(validQuestions.length < 1){
+      setError('You have to have at least 1 full question!')
+    }else{
+      saveTemplateInDB(userId!, newGameTemplate);
+      navigate("/create");
+    }
   }
 
   function validateQuestion(question: Question) {
@@ -71,10 +76,11 @@ export default function EditTemplate() {
     }
     removeItemFromState(slideNumber, setQuestions);
   };
+
   return (
     <main className="question-placeholder">
       <div className="bar question-bar">
-        {questions.map((question, index) => (
+        {questions && questions.map((question, index) => (
           <SlideTemplate
             key={question.questionNumber}
             slideNumber={index + 1}
@@ -117,7 +123,7 @@ export default function EditTemplate() {
           isOpen={isOpen}
           toggleModal={toggleModal}
           children={
-            <>
+            <div style={{width:'100%', height:'100%', textAlign:'center'}}>
               <h2>Template name</h2>
               <MyInput
                 value={templateName}
@@ -126,7 +132,8 @@ export default function EditTemplate() {
                 characterLimit={20}
                 visibleWarning={true}
               />
-            </>
+              {error && <span className="error">{error}</span>}
+            </div>
           }
           submitButtonText={"Save template"}
           onSubmit={() => {

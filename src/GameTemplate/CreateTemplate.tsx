@@ -62,6 +62,7 @@ export default function CreateTemplate() {
 
   const [questionTime, setQuestionTime] = useState(10);
   const [templateName, setTemplateName] = useState("");
+  const [error, setError] = useState("");
 
   const timesForAnswer = [5, 10, 20, 30, 40];
 
@@ -79,8 +80,12 @@ export default function CreateTemplate() {
       allQuestions: validQuestions,
       questionTime: questionTime,
     };
-    saveTemplateInDB(userId!, gameTemplate);
-    navigate("/create");
+    if (validQuestions.length < 1) {
+      setError("You have to have at least 1 full question!");
+    } else {
+      saveTemplateInDB(userId!, gameTemplate);
+      navigate("/create");
+    }
   }
 
   function validateQuestion(question: Question) {
@@ -97,17 +102,17 @@ export default function CreateTemplate() {
     return false;
   }
 
-
-
   const deleteQuestion = async (slideNumber: number) => {
-      if((slideNumber >= questions.length || slideNumber < choosenQuestion) && choosenQuestion > 1){
-        setChoosenQuestion(choosenQuestion-1)
-      }else{
-        setChoosenQuestion(1)
-      }
-      removeItemFromState(slideNumber, setQuestions)
+    if (
+      (slideNumber >= questions.length || slideNumber < choosenQuestion) &&
+      choosenQuestion > 1
+    ) {
+      setChoosenQuestion(choosenQuestion - 1);
+    } else {
+      setChoosenQuestion(1);
+    }
+    removeItemFromState(slideNumber, setQuestions);
   };
-
 
   return (
     <main className="question-placeholder">
@@ -115,13 +120,13 @@ export default function CreateTemplate() {
         {questions.map((question, index) => (
           <SlideTemplate
             key={question.questionNumber}
-            slideNumber={index+1}
+            slideNumber={index + 1}
             questions={questions}
             setQuestions={setQuestions}
             choosenQuestion={choosenQuestion}
             setChoosenQuestion={setChoosenQuestion}
             removeSlide={() => {
-              deleteQuestion(index+1);
+              deleteQuestion(index + 1);
             }}
           ></SlideTemplate>
         ))}
@@ -155,7 +160,7 @@ export default function CreateTemplate() {
           isOpen={isOpen}
           toggleModal={toggleModal}
           children={
-            <>
+            <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
               <h2>Template name</h2>
               <MyInput
                 value={templateName}
@@ -164,7 +169,8 @@ export default function CreateTemplate() {
                 characterLimit={20}
                 visibleWarning={true}
               />
-            </>
+              {error && <span className="error">{error}</span>}
+            </div>
           }
           submitButtonText={"Save template"}
           onSubmit={() => {

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ReadyImagesURL } from "../../appUrls";
+import { ReadyImagesURL } from "../appUrls";
 import { Question } from "./questions.models";
+import Answer from "./Answer";
 
 //@ts-ignore
 export default function QuestionTemplate({
@@ -59,7 +60,6 @@ export default function QuestionTemplate({
         }
         return question;
       });
-      // console.log(prevQuestions);
       return prevQuestions;
     });
   }
@@ -72,6 +72,7 @@ export default function QuestionTemplate({
   };
 
   function handleCheckboxChange(checkboxNumber: number) {
+    console.log(checkboxNumber);
     if (checkboxes[checkboxNumber].checked) {
       const updatedCheckboxes = checkboxes.map((checkbox) => {
         if (checkbox.id === checkboxNumber) {
@@ -79,6 +80,7 @@ export default function QuestionTemplate({
         }
         return { ...checkbox };
       });
+      console.log(updatedCheckboxes);
       setCheckboxes(updatedCheckboxes);
     } else {
       const updatedCheckboxes = checkboxes.map((checkbox) => {
@@ -87,10 +89,37 @@ export default function QuestionTemplate({
         }
         return { ...checkbox, checked: false };
       });
+      console.log(updatedCheckboxes);
       setCheckboxes(updatedCheckboxes);
     }
   }
 
+  const answers = [
+    {
+      answerSign: "A",
+      answerRef: answerARef,
+      answer: question.answerA,
+      checkboxNumber: 0,
+    },
+    {
+      answerSign: "B",
+      answerRef: answerBRef,
+      answer: question.answerB,
+      checkboxNumber: 1,
+    },
+    {
+      answerSign: "C",
+      answerRef: answerCRef,
+      answer: question.answerC,
+      checkboxNumber: 2,
+    },
+    {
+      answerSign: "D",
+      answerRef: answerDRef,
+      answer: question.answerD,
+      checkboxNumber: 3,
+    },
+  ];
   return (
     <section className="question-template">
       <div
@@ -112,98 +141,19 @@ export default function QuestionTemplate({
         alt="Beautiful"
       />
       <div className="answers-placeholder">
-        <span id="answer-A" className="answer">
-          <div
-            ref={answerARef}
-            className="my-input editable-div"
-            contentEditable={true}
-            onInput={() => {
-              handleInput(answerARef, characterLimit);
-              //@ts-ignore
-              onQuestionChange("answerA", answerARef.current!.innerText);
-            }}
-          >
-            {question.answerA}
-          </div>
-          <input
-            checked={checkboxes[0].checked}
-            className="answer-checkbox"
-            type="checkbox"
-            onChange={(e) => {
-              handleCheckboxChange(0);
-              onQuestionChange("correctAnswer", "A");
-            }}
+        {answers.map((answer) => (
+          <Answer
+            answerSign={answer.answerSign}
+            answerRef={answer.answerRef}
+            answer={answer.answer}
+            checkboxNumber={answer.checkboxNumber}
+            characterLimit={characterLimit}
+            handleInput={handleInput}
+            onQuestionChange={onQuestionChange}
+            checkboxes={checkboxes}
+            handleCheckboxChange={handleCheckboxChange}
           />
-        </span>
-        <span id="answer-B" className="answer">
-          <div
-            ref={answerBRef}
-            className="my-input editable-div"
-            contentEditable={true}
-            onInput={() => {
-              handleInput(answerBRef, characterLimit);
-              //@ts-ignore
-              onQuestionChange("answerB", answerBRef.current!.innerText);
-            }}
-          >
-            {question.answerB}
-          </div>
-          <input
-            checked={checkboxes[1].checked}
-            className="answer-checkbox"
-            type="checkbox"
-            onChange={() => {
-              handleCheckboxChange(1);
-              onQuestionChange("correctAnswer", "B");
-            }}
-          />
-        </span>
-        <span id="answer-C" className="answer">
-          <div
-            ref={answerCRef}
-            className="my-input editable-div"
-            contentEditable={true}
-            onInput={() => {
-              handleInput(answerCRef, characterLimit);
-              //@ts-ignore
-              onQuestionChange("answerC", answerCRef.current!.innerText);
-            }}
-          >
-            {question.answerC}
-          </div>
-          <input
-            checked={checkboxes[2].checked}
-            className="answer-checkbox"
-            type="checkbox"
-            onChange={() => {
-              handleCheckboxChange(2);
-              onQuestionChange("correctAnswer", "C");
-            }}
-          />
-        </span>
-        <span id="answer-D" className="answer">
-          <div
-            ref={answerDRef}
-            className="my-input editable-div"
-            contentEditable={true}
-            onInput={() => {
-              handleInput(answerDRef, characterLimit);
-              //@ts-ignore
-              onQuestionChange("answerD", answerDRef.current!.innerText);
-            }}
-          >
-            {question.answerD}
-          </div>
-          <input
-            checked={checkboxes[3].checked}
-            className="answer-checkbox"
-            type="checkbox"
-            onChange={() => {
-              handleCheckboxChange(3);
-              onQuestionChange("correctAnswer", "D");
-            }}
-          />
-        </span>
+        ))}
       </div>
     </section>
   );

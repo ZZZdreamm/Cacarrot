@@ -41,16 +41,12 @@ export default function CreateGame() {
   }
 
   function randomNumberInRange(min:number, max:number) {
-    // 👇️ get number between min (inclusive) and max (inclusive)
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   return (
     <>
-      {/* // <main className="wrapper">
-    //   <section className="landing-page"> */}
       <section className="flex-section">
         <article className="half-article">
-          {/* <p className="paragraph">Choose game template</p> */}
           <button
             className="my-button"
             onClick={(e:any)=>{toggleModal(e, isOpen, setIsOpen)}}
@@ -106,9 +102,6 @@ export default function CreateGame() {
             }
             submitButtonText={"Choose"}
             onSubmit={() => {
-              // const gameProps = {
-              //   template: choosenTemplate,
-              // };
               navigate("/edit-template", { state: choosenTemplate });
             }}
           />
@@ -125,8 +118,6 @@ export default function CreateGame() {
           </button>
         </article>
       </section>
-      {/* //   </section>
-    // </main> */}
     </>
   );
 }

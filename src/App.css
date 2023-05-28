@@ -348,6 +348,7 @@ form{
 }
 .error{
   color: red;
+  font-size: 1.5rem;
 }
 .grid-container{
   display: grid;
