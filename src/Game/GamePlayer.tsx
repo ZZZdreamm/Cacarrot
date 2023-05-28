@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Timer from "../Utilities/Timer";
 import {
   getGameData,
   getGameStart,
@@ -11,7 +10,7 @@ import {
   fetchData,
   setDataInDB,
 } from "../FirebaseDatabase/GamesInDB";
-import { useFetcher, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Answer, Game, Player } from "./game.models";
 import AnswerPage from "./AnswerPage";
 import Statistics from "./Statistics";
@@ -35,6 +34,7 @@ export default function GamePlayer() {
   const [lastQuestionPoints, setLastQuestionPoints] = useState(0);
   const [lastAnswer, setLastAnswer] = useState<Answer>();
   const [gameStart, setGameStart] = useState<string>("started");
+  const [startingTime, setStartingTime] = useState()
 
   const minusPointsForSecond = Math.round(1000 / state.game.gameTemplate.questionTime);
   const playerName = state.username ? state.username : localStorage.getItem(`username/${state.playerNumber}`);
@@ -83,6 +83,7 @@ export default function GamePlayer() {
           "lastAnswer",
           player.id
         );
+        fetchData(game.gamecode, startingTime, setStartingTime, 'startingTime')
         getOnShownComponent(game.gamecode, player.id, setShownComponent);
       }
     }
@@ -145,24 +146,18 @@ export default function GamePlayer() {
         <AnswerPage
           gameState={game}
           time={time}
-          setTime={setTime}
           setShownComponent={setShownComponent}
           username={state.username}
           setPointsForLast={setPointsGivenLast}
-          lastAnswer={lastAnswer}
-          setLastAnswer={setLastAnswer}
-        />
+          setLastAnswer={setLastAnswer}/>
       )}
       {shownComponent == "between" && gameStart == "started" && (
         <BetweenQuestions
           gameState={game}
-          player={player}
           setShownComponent={setShownComponent}
           questionDone={questionDone}
           setQuestionsDone={setQuestionDone}
           setTime={setTime}
-          points={points}
-          setPoints={setPoints}
           lastQuestionPoints={lastQuestionPoints}
           setLastQuestionPoints={setLastQuestionPoints}
         />

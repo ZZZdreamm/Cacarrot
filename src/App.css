@@ -368,3 +368,25 @@ form{
   border-radius: 50%;
 
 }
+.circle{
+  border-radius: 50%;
+  background-color: #7c73e6;
+  height: fit-content;
+  width: fit-content;
+  height: 13rem;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rolling-square{
+  height: fit-content;
+  width: fit-content;
+  background-color: white;
+  height: 9rem;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}

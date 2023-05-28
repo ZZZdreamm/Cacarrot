@@ -2,11 +2,17 @@ import { useEffect } from "react";
 import Timer from "../Utilities/Timer";
 import PlayerStats from "./PlayerStats";
 import { Player } from "./game.models";
+import { setDataInDB } from "../FirebaseDatabase/GamesInDB";
 
-export default function Statistics({ time, setTime, players, setPlayers }:StatisticsProps) {
+export default function Statistics({ time, setTime, players, setPlayers, gamecode }:StatisticsProps) {
   useEffect(()=>{
     setPlayers(players.sort((player1, player2) => player2.points - player1.points))
   },[])
+  useEffect(()=>{
+    if(time < 1){
+      setDataInDB(gamecode, 3, "startingTime");
+    }
+  },[time])
   return (
     <>
       <Timer time={time} setTime={setTime} bonusStyling={{top:'1%'}} />
@@ -25,8 +31,9 @@ export default function Statistics({ time, setTime, players, setPlayers }:Statis
 }
 
 interface StatisticsProps{
-  time:Number;
+  time:number;
   setTime:(time:number)=>void;
   players:Player[];
   setPlayers:(players:Player[])=>void;
+  gamecode:string;
 }

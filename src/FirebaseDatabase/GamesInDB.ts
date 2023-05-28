@@ -39,7 +39,7 @@ export async function createGameInDB(game:Game) {
       const gameData = dataSnapshot.val()
       let transformedData = {}
       if(gameData){
-        const {gameTemplate, gamecode, players, started, currentQuestion, gamePhase, time} = gameData??{}
+        const {gameTemplate, gamecode, players, started, currentQuestion, gamePhase, time, startingTime} = gameData??{}
         let myPlayers : any = []
         if(players){
           Object.values(players).forEach((player:any) => {
@@ -53,7 +53,7 @@ export async function createGameInDB(game:Game) {
             }
           })
         }
-        transformedData = {gameTemplate, gamecode, players:myPlayers, started, currentQuestion, gamePhase, time}
+        transformedData = {gameTemplate, gamecode, players:myPlayers, started, currentQuestion, gamePhase, time, startingTime}
         setGame(transformedData)
       }
     })
@@ -160,6 +160,13 @@ export async function createGameInDB(game:Game) {
      })
   }
 
+  export async function getOnStartingTime(gamecode:string, setStartingTime:(time:number) => void) {
+    gamesRef.child(gamecode).child('startingTime').on('value', (snapshot) => {
+      const time = snapshot.val()
+      setStartingTime(time)
+    })
+  }
+
   export const setDataInDB = async (gamecode:string, data:any, actionType:string, playerId?:number) => {
     if(actionType == 'game'){
       await gamesRef.child(gamecode).set(data)
@@ -183,13 +190,22 @@ export async function createGameInDB(game:Game) {
       await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').set(data)
     }else if(actionType == 'gameStarted'){
       await gamesRef.child(gamecode).child('started').set(data)
+    }else if(actionType == 'startingTime'){
+      await gamesRef.child(gamecode).child('startingTime').set(data)
     }
   }
 
   export const fetchData = async (gamecode:string, data :any, setData:(e:any) => void, actionType:string, playerId?:number) => {
     const snapshot :any = await chooseTypeOnce(actionType, gamecode, playerId)
     let fetchedData = snapshot.val();
-    if (fetchedData) {
+    if(typeof data == 'number'){
+      if (typeof fetchedData == 'number') {
+        setData(fetchedData);
+      } else {
+        setData(data)
+      }
+    }
+    else if (fetchedData) {
       setData(fetchedData);
     } else {
       setData(data)
@@ -217,5 +233,7 @@ export async function createGameInDB(game:Game) {
       return await gamesRef.child(gamecode).child('currentQuestion').once('value')
     }else if(actionType == 'lastAnswer'){
       return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').once('value')
+    }else if(actionType == 'startingTime'){
+      return await gamesRef.child(gamecode).child('startingTime').once('value')
     }
   }

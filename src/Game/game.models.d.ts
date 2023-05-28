@@ -8,6 +8,7 @@ export interface Game{
     currentQuestion:number;
     time:number;
     gamePhase:number;
+    startingTime:number;
 }
 
 export interface GameTemplate{

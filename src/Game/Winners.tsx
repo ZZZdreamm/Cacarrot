@@ -16,7 +16,7 @@ export default function Winners({ winners }: WinnersProps) {
       >
         <h1>Winners</h1>
         {winnersToMap.map((winner) =>(
-          winner.name && <SingleWinner name={winner.name} points={winner.points} statsColor={winner.statsColor}/>
+          winner.name && <SingleWinner key={winner.name} name={winner.name} points={winner.points} statsColor={winner.statsColor}/>
         ))}
 
         <button

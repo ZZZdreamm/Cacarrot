@@ -22,7 +22,8 @@ export default function Gamecode() {
     started: 'waiting',
     currentQuestion:0,
     time:state.template.questionTime,
-    gamePhase:1
+    gamePhase:1,
+    startingTime:3
   });
 
   const [startDisabled, setStartDisabled] = useState(true);
@@ -45,7 +46,7 @@ export default function Gamecode() {
       navigate(`/game-host/${game.gamecode}`, { state: gameProps });
     }
   }, [game]);
-  
+
   return (
     <div className="column-shaped-container">
       {game && (

@@ -9,7 +9,7 @@ import {
   getGameData,
   setCurrentQuestionInDB,
   fetchData,
-  setDataInDB
+  setDataInDB,
 } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import { getWinners } from "./FunctionsGame";
@@ -54,7 +54,7 @@ export default function GameHost() {
   useEffect(() => {
     if (gamePhase) {
       if (gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
-        setDataInDB(game.gamecode, "winners", 'gameStarted');
+        setDataInDB(game.gamecode, "winners", "gameStarted");
         getWinners(players, setWinners);
       } else if (gamePhase % 2 == 0) {
         setShownComponent("statistics");
@@ -76,7 +76,7 @@ export default function GameHost() {
 
   useEffect(() => {
     if (time || time == 0) {
-      setDataInDB(game.gamecode, time, 'time');
+      setDataInDB(game.gamecode, time, "time");
       if (time < 1 && gamePhase) {
         setGame({
           ...game,
@@ -129,8 +129,9 @@ export default function GameHost() {
           {shownComponent == "question" && (
             <ShownQuestion
               currentQuestion={currentQuestion}
-              time={time}
+              time={time!}
               setTime={setTime}
+              gamecode={game.gamecode}
             />
           )}
           {shownComponent == "statistics" && (
@@ -139,6 +140,7 @@ export default function GameHost() {
               setTime={setTime}
               players={players}
               setPlayers={setPlayers}
+              gamecode={game.gamecode}
             />
           )}
           {shownComponent == "winners" && <Winners winners={winners} />}

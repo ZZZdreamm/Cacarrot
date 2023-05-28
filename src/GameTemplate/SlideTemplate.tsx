@@ -6,7 +6,6 @@ import { ReadyImagesURL } from "../appUrls";
 //@ts-ignore
 export default function SlideTemplate({slideNumber, questions, setQuestions,choosenQuestion, setChoosenQuestion, removeSlide}){
     useEffect(()=>{
-        console.log(slideNumber)
         questions[slideNumber-1].questionNumber = slideNumber
     },[slideNumber])
     const colorSlide = slideNumber === choosenQuestion ? {background: '#7c73e6'} : {}

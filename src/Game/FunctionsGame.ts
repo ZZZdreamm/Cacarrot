@@ -24,6 +24,7 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
     currentQuestion: 0,
     time: gameState.template.questionTime,
     gamePhase: 1,
+    startingTime:3
   };
   if (fetchedData) {
     const {
@@ -34,6 +35,7 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
       currentQuestion,
       time,
       gamePhase,
+      startingTime
     } = fetchedData;
     let myPlayers: any = players
       ? Object.values(players).map((player: any) => {
@@ -56,6 +58,7 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
       currentQuestion,
       time,
       gamePhase,
+      startingTime
     };
     setGame(transformedData);
   } else {
