@@ -1,6 +1,6 @@
 import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
 import { createGameInDB, setDataInDB } from "../FirebaseDatabase/GamesInDB";
-import { Game, Player } from "./game.models";
+import { Answer, Game, Player } from "./game.models";
 
 export function startGame(game: Game, setGame: (e: any) => void) {
   if (game!.players.length >= 1) {
@@ -69,3 +69,5 @@ export function getWinners(players: Player[], setWinners: (e: any) => void) {
   );
   setWinners([localWinners[0], localWinners[1], localWinners[2]]);
 }
+
+

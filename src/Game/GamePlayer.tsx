@@ -22,9 +22,8 @@ import { getWinners } from "./FunctionsGame";
 
 export default function GamePlayer() {
   const location = useLocation();
-  //@ts-ignore
   const { state } = location;
-  //   const [gameState, setGameState] = useState()
+
   const [game, setGame] = useState<Game>(state.game);
   const [time, setTime] = useState(state.game.gameTemplate.questionTime);
   const [shownComponent, setShownComponent] = useState<string | null>(null);
@@ -32,21 +31,16 @@ export default function GamePlayer() {
   const [players, setPlayers] = useState<Player[] | null>([]);
   const [winners, setWinners] = useState<Player[]>([]);
   const [points, setPoints] = useState<number>(0);
-
-  const [playerName, setPlayerName] = useState("");
   const [player, setPlayer] = useState<Player>();
   const [lastQuestionPoints, setLastQuestionPoints] = useState(0);
   const [lastAnswer, setLastAnswer] = useState<Answer>();
-
   const [gameStart, setGameStart] = useState<string>("started");
-  const [minusPointsForSecond, setMinusPointsForSecond] = useState(0);
+
+  const minusPointsForSecond = Math.round(1000 / state.game.gameTemplate.questionTime);
+  const playerName = state.username ? state.username : localStorage.getItem(`username/${state.playerNumber}`);
 
   useEffect(() => {
     getGameData(state.game.gamecode, setGame);
-    const getName = state.username
-      ? state.username
-      : localStorage.getItem(`username/${state.playerNumber}`);
-    setPlayerName(getName);
     getTimeFromDB(game?.gamecode, setTime);
     getGameStart(game.gamecode, setGameStart);
   }, []);
@@ -67,9 +61,6 @@ export default function GamePlayer() {
 
   useEffect(() => {
     if (game.gamecode && playerName) {
-      setMinusPointsForSecond(
-        Math.round(1000 / game.gameTemplate.questionTime)
-      );
       if (!player) {
         getPlayer(game.gamecode, playerName, setPlayer);
       }
