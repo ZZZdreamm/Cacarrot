@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { ReadyImagesURL } from "../appUrls";
 import { Player } from "./game.models";
 import SingleWinner from "./SingleWinners";
 

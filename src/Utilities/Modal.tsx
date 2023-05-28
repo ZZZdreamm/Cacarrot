@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Modal from "styled-react-modal";
 
 const StyledModal = Modal.styled`

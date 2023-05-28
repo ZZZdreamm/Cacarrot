@@ -23,6 +23,7 @@ export interface Player{
     points:number;
     lastAnswer:Answer;
     shownComponent:string;
+    activeBonuses?:string[];
 }
 export interface Answer{
     choosenAnswer:string;
