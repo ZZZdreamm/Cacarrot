@@ -2,7 +2,6 @@ It is kahoot like game.
 
 About it:
 
-You can't create game on phone because it is too small for showing answers in game anyway, so host must be on bigger device.
 Game host hosts game on device and clients join to it by writing gamecode in input on landing page.
 You have to be registered and logged to host a game or/and create/edit your game templates.
 Game consists of few stages:
@@ -14,7 +13,7 @@ slot for others.
 If host closes website he have 15 seconds to come back to game or else game is considered closed and players will get communicate about
 it being abandoned.
 State of game on every device is being consistent after refresh of page by getting data from firebase database before rendering whole game component.
-
+You can't create game on phone because it is too small for showing answers in game anyway, so host must be on bigger device.
 
 TODO:
 - between questions add possibility for players to buy special bonuses that will affect them or other players for their points
