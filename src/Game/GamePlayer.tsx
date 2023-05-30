@@ -9,6 +9,8 @@ import {
   setPointsForPlayer,
   fetchData,
   setDataInDB,
+  getOnWinners,
+  getOnIfHostConnected,
 } from "../FirebaseDatabase/GamesInDB";
 import { useLocation } from "react-router-dom";
 import { Answer, Game, Player } from "./game.models";
@@ -17,7 +19,10 @@ import Statistics from "./Statistics";
 import Winners from "./Winners";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import BetweenQuestions from "./BetweenQuestions";
-import { getWinners } from "./FunctionsGame";
+import { getWinners, playerLeavesGame } from "./FunctionsGame";
+import { IfConnected } from "../Utilities/Connected";
+import WaitingForConnection from "../Utilities/WaitingForConnection";
+import PlayerBar from "./Player";
 
 export default function GamePlayer() {
   const location = useLocation();
@@ -34,15 +39,31 @@ export default function GamePlayer() {
   const [lastQuestionPoints, setLastQuestionPoints] = useState(0);
   const [lastAnswer, setLastAnswer] = useState<Answer>();
   const [gameStart, setGameStart] = useState<string>("started");
-  const [startingTime, setStartingTime] = useState()
+  const [startingTime, setStartingTime] = useState();
 
-  const minusPointsForSecond = Math.round(1000 / state.game.gameTemplate.questionTime);
-  const playerName = state.username ? state.username : localStorage.getItem(`username/${state.playerNumber}`);
+  const [activeEffects, setActiveEffects] = useState<string[]>([])
+  const [connected, setConnected] = useState(false);
+  const [reconnectionTime, setReconnectionTime] = useState(() => {
+    const storedTime = localStorage.getItem('time')
+    if(storedTime && storedTime != 'undefined'){
+      return parseInt(JSON.parse(storedTime))
+    }else{
+      return 15
+    }
+  })
+
+  const minusPointsForSecond = Math.round(
+    1000 / state.game.gameTemplate.questionTime
+  );
+  const playerName = state.username
+    ? state.username
+    : localStorage.getItem(`username/${state.playerNumber}`);
 
   useEffect(() => {
     getGameData(state.game.gamecode, setGame);
     getTimeFromDB(game?.gamecode, setTime);
     getGameStart(game.gamecode, setGameStart);
+    getOnIfHostConnected(game.gamecode, setConnected)
   }, []);
 
   useEffect(() => {
@@ -83,39 +104,35 @@ export default function GamePlayer() {
           "lastAnswer",
           player.id
         );
-        fetchData(game.gamecode, startingTime, setStartingTime, 'startingTime')
+        fetchData(game.gamecode, startingTime, setStartingTime, "startingTime");
+        getOnWinners(game.gamecode, setWinners);
         getOnShownComponent(game.gamecode, player.id, setShownComponent);
       }
     }
   }, [game.gamecode, playerName, player]);
 
   useEffect(() => {
-    if (time < 1) {
-      if (game.gamePhase == game.gameTemplate.allQuestions.length * 2) {
-        getWinners(players!, setWinners);
+      if (game.gamePhase == game.gameTemplate.allQuestions.length * 2+1) {
+        getWinners(game.players!, setWinners);
         setShownComponent("winners");
-      } else if (shownComponent == "answers" && game.gamePhase % 2 == 1) {
+      } else if (shownComponent == "answers" && game.gamePhase % 2 == 0) {
         setShownComponent("between");
       } else if (
         shownComponent == "between" &&
-        questionDone < state.game.gameTemplate.allQuestions.length &&
-        game.gamePhase % 2 == 0
+        game.gamePhase % 2 == 1
       ) {
+        console.log('gamephase mnei zmienil')
         setShownComponent("answers");
       }
-    }
-  }, [time]);
+  }, [game.gamePhase]);
 
   useEffect(() => {
     setPlayers(game?.players!);
   }, [game?.players]);
 
   useEffect(() => {
-    if (game?.started == "winners") {
-      getWinners(players!, setWinners);
-      setShownComponent("winners");
-    }
-  }, [game?.started]);
+    setWinners(game.winners);
+  }, [game.winners]);
 
   useEffect(() => {
     if (player && shownComponent) {
@@ -136,34 +153,48 @@ export default function GamePlayer() {
         setPointsForPlayer(game.gamecode, state.username, points + newPoints);
         return points + newPoints;
       });
+    }else{
+      setLastQuestionPoints(0);
     }
   }
 
   return (
     <>
-      <UnloadPrompt />
-      {shownComponent == "answers" && gameStart == "started" && (
-        <AnswerPage
-          gameState={game}
-          time={time}
-          setShownComponent={setShownComponent}
-          username={state.username}
-          setPointsForLast={setPointsGivenLast}
-          setLastAnswer={setLastAnswer}/>
-      )}
-      {shownComponent == "between" && gameStart == "started" && (
-        <BetweenQuestions
-          gameState={game}
-          setShownComponent={setShownComponent}
-          questionDone={questionDone}
-          setQuestionsDone={setQuestionDone}
-          setTime={setTime}
-          lastQuestionPoints={lastQuestionPoints}
-          setLastQuestionPoints={setLastQuestionPoints}
-        />
-      )}
-      {shownComponent == "winners" && gameStart == "winners" && (
-        <Winners winners={winners} />
+      <UnloadPrompt/>
+      {player &&
+      <PlayerBar player={player!} points={points}/>
+}
+      {connected ? (
+        <>
+          {shownComponent == "answers" && gameStart == "started" && (
+            <AnswerPage
+              gameState={game}
+              time={time}
+              setShownComponent={setShownComponent}
+              username={state.username}
+              setPointsForLast={setPointsGivenLast}
+              setLastAnswer={setLastAnswer}
+            />
+          )}
+          {shownComponent == "between" && gameStart == "started" && (
+            <BetweenQuestions
+              gameState={game}
+              setShownComponent={setShownComponent}
+              questionDone={questionDone}
+              setQuestionsDone={setQuestionDone}
+              setTime={setTime}
+              lastQuestionPoints={lastQuestionPoints}
+              setLastQuestionPoints={setLastQuestionPoints}
+              player={player!}
+              points={points}
+              setPoints={setPoints} setActiveEffects={setActiveEffects} />
+          )}
+          {shownComponent == "winners" && gameStart == "winners" && winners && (
+            <Winners winners={winners} />
+          )}
+        </>
+      ) : (
+        <WaitingForConnection time={reconnectionTime} setTime={setReconnectionTime}/>
       )}
     </>
   );

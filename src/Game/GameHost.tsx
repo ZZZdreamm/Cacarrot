@@ -10,9 +10,13 @@ import {
   setCurrentQuestionInDB,
   fetchData,
   setDataInDB,
+  getOnIfHostConnected,
 } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
-import { getWinners } from "./FunctionsGame";
+import { getSortedPlayers, getWinners } from "./FunctionsGame";
+import WaitingForConnection from "../Utilities/WaitingForConnection";
+import { HostConnection } from "../FirebaseDatabase/ConnectedToDB";
+
 
 export default function GameHost() {
   const location = useLocation();
@@ -32,6 +36,13 @@ export default function GameHost() {
   const [gamePhase, setGamePhase] = useState<number>();
   const [showPage, setShowPage] = useState(false);
 
+  const [connected, setConnected] = useState(true)
+
+  useEffect(()=>{
+    HostConnection(gamecode)
+    getGameData(gamecode, setGame, false);
+  },[])
+
   useEffect(() => {
     if (
       (time || time == 0) &&
@@ -44,7 +55,9 @@ export default function GameHost() {
 
   useEffect(() => {
     if (gamecode) {
+      fetchData(gamecode, connected, setConnected, 'hostConnection')
       fetchData(gamecode, time, setTime, "time");
+      fetchData(gamecode, winners, setWinners, 'winners')
       fetchData(gamecode, gamePhase, setGamePhase, "gamePhase");
       fetchData(gamecode, 0, setCurrentQuestionIndex, "currentQuestionIndex");
       getGameData(gamecode, setGame, true);
@@ -54,8 +67,7 @@ export default function GameHost() {
   useEffect(() => {
     if (gamePhase) {
       if (gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
-        setDataInDB(game.gamecode, "winners", "gameStarted");
-        getWinners(players, setWinners);
+
       } else if (gamePhase % 2 == 0) {
         setShownComponent("statistics");
       } else if (gamePhase % 2 == 1) {
@@ -84,6 +96,10 @@ export default function GameHost() {
         });
         setGamePhase(gamePhase + 1);
         setDataInDB(game.gamecode, game.gamePhase + 1, "gamePhase");
+        if(gamePhase+1 == game.gameTemplate.allQuestions.length * 2 + 1){
+          setDataInDB(game.gamecode, "winners", "gameStarted");
+          getWinners(players, setWinners);
+        }
       }
     }
   }, [time]);
@@ -95,14 +111,11 @@ export default function GameHost() {
   }, [currentQuestionIndex]);
 
   useEffect(() => {
-    if (winners.length == 3) {
+    if (winners.length > 0) {
+      setDataInDB(game.gamecode, winners, 'winners')
       setShownComponent("winners");
     }
   }, [winners]);
-
-  useEffect(() => {
-    getGameData(game.gamecode, setGame, false);
-  }, []);
 
   useEffect(() => {
     if (currentQuestionIndex) {
@@ -111,13 +124,13 @@ export default function GameHost() {
   }, [shownComponent]);
 
   useEffect(() => {
-    setPlayers(game.players);
+    getSortedPlayers(game.players, setPlayers)
   }, [game.players]);
 
   return (
     <>
-      <UnloadPrompt />
-      {showPage && (
+      <UnloadPrompt/>
+      {showPage && connected ? (
         <div
           className="column-shaped-container"
           style={{
@@ -145,7 +158,7 @@ export default function GameHost() {
           )}
           {shownComponent == "winners" && <Winners winners={winners} />}
         </div>
-      )}
+      ) : <WaitingForConnection/>}
     </>
   );
 }

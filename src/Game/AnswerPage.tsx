@@ -65,11 +65,6 @@ export default function AnswerPage({
   useEffect(() => {
     if(startingTime || startingTime == 0){
         onTimeChange(3 - startingTime);
-        // if (startingTime < 1) {
-        //   setTimeout(() => {
-        //     setShowQuestion(true);
-        //   }, 1000);
-        // }
     }
   }, [startingTime]);
   function onTimeChange(rotationNumber: number) {
@@ -84,6 +79,7 @@ export default function AnswerPage({
           <StartingTimer
             time={startingTime}
             setTime={()=>{}}
+            bonusStyling={{marginTop:'0'}}
           />
         </div>
       )}

@@ -7,6 +7,7 @@ import {
   setPointsForPlayer,
 } from "../FirebaseDatabase/GamesInDB";
 import { Answer, Player } from "./game.models";
+import ChooseAbility from "./ChooseAbility";
 
 //@ts-ignore
 export default function BetweenQuestions({
@@ -17,8 +18,13 @@ export default function BetweenQuestions({
   setTime,
   lastQuestionPoints,
   setLastQuestionPoints,
+  player,
+  points,
+  setPoints,
+  setActiveEffects
 }: BetweenQuestionsProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [componentState, setComponentState] = useState("showingAnswer");
 
   useEffect(() => {
     fetchData(
@@ -32,27 +38,41 @@ export default function BetweenQuestions({
 
   useEffect(() => {
     if (currentQuestion > questionDone) {
+      console.log('alo')
       setTime(gameState.gameTemplate.questionTime);
       setLastQuestionPoints(0);
       setShownComponent("answers");
     }
   }, [currentQuestion]);
 
+  useEffect(() => {
+    // if (gameState.gamePhase % 2 == 0) {
+    //   setComponentState("choosingAbility");
+    // } else {
+      setComponentState("showingAnswer");
+    // }
+  }, [gameState.gamePhase]);
+
   const answerEffectImage =
     lastQuestionPoints != 0 ? `good-answer.png` : `wrong-answer.png`;
   const answerText = lastQuestionPoints != 0 ? `Good answer!` : `Wrong answer!`;
   return (
     <>
-      <div className="answer-result-container">
-        <img
-          className="circle-image"
-          src={`${ReadyImagesURL}/${answerEffectImage}`}
-          alt="Answer"
-          style={{ width: "50%", aspectRatio: 1 }}
-        />
-        <h2>{answerText}</h2>
-        <h4>+ {lastQuestionPoints} points</h4>
-      </div>
+      {componentState == "showingAnswer" && (
+        <>
+          <div className="answer-result-container">
+            <img
+              className="circle-image"
+              src={`${ReadyImagesURL}/${answerEffectImage}`}
+              alt="Answer"
+              style={{ width: "50%", aspectRatio: 1 }}
+            />
+            <h2>{answerText}</h2>
+            <h4>+ {lastQuestionPoints} points</h4>
+          </div>
+        </>
+      )}
+      {/* {componentState == "choosingAbility" && <ChooseAbility gameState={gameState} player={player} setPoints={setPoints} setActiveEffects={setActiveEffects} points={points} />} */}
     </>
   );
 }
@@ -65,4 +85,8 @@ interface BetweenQuestionsProps {
   setTime: (time: number) => void;
   lastQuestionPoints: number;
   setLastQuestionPoints: (points: number) => void;
+  player:Player;
+  points:number;
+  setPoints:(points:number) => void;
+  setActiveEffects:(effects:string[]) => void;
 }

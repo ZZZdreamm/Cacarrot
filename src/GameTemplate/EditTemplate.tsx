@@ -29,7 +29,7 @@ export default function EditTemplate() {
   const timesForAnswer = [5, 10, 20, 30, 40];
 
   function submitTemplate(){
-    const saved = saveTemplate(questions, templateName, questionTime);
+    const saved = saveTemplate(questions, templateName, questionTime, gameTemplate.id);
     if(saved){
       navigate('/create')
     }else{

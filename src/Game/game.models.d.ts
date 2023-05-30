@@ -9,6 +9,8 @@ export interface Game{
     time:number;
     gamePhase:number;
     startingTime:number;
+    winners:Player[];
+    hostConnection:boolean;
 }
 
 export interface GameTemplate{
@@ -30,4 +32,12 @@ export interface Answer{
     choosenAnswer:string;
     sendingTime:number;
     questionNumber:number;
+}
+
+export interface Ability{
+    name:string;
+    cost:number;
+    onChoose:any;
+    representingImage:string;
+    explanation:string;
 }

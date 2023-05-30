@@ -1,20 +1,11 @@
 import React, { useEffect } from "react";
+import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
 
-const UnloadPrompt = (handleLeaveWebsite:any) => {
+const UnloadPrompt = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
       event.returnValue = ""; // This is necessary for Chrome
-
-
-      const confirmationMessage = 'Are you sure you want to leave?'; // Custom message
-
-      // Display the custom alert message
-      if (confirmationMessage) {
-        event.returnValue = confirmationMessage;
-      }
-
-        // handleLeaveWebsite();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
 

@@ -2,7 +2,7 @@ import { GameTemplate } from "../Game/game.models"
 import { usersRef } from "./FirebaseConfig"
 
 export async function saveTemplateInDB(userId:string, gameTemplate:GameTemplate){
-    await usersRef.child(userId).child('templates').child(gameTemplate.templateName).set(gameTemplate)
+    await usersRef.child(userId).child('templates').child(gameTemplate.id).set(gameTemplate)
 }
 
 export async function getUserTemplates(userId:string, callback:any){

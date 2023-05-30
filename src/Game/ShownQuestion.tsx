@@ -20,11 +20,6 @@ export default function ShownQuestion({
     fetchData(gamecode, 3, setStartingTime, "startingTime")
   }, []);
 
-  useEffect(()=>{
-    console.log(startingTime)
-
-  },[startingTime])
-
   useEffect(() => {
     if (startingTime) {
       onTimeChange(3 - startingTime);
@@ -46,10 +41,15 @@ export default function ShownQuestion({
   return (
     <>
       {!showQuestion && (
-        <div className="circle" style={{ position: "absolute", top: "45%" }}>
-          <div className="rolling-square" style={rotation}></div>
-          <StartingTimer time={startingTime} setTime={setStartingTime} />
+        <>
+        <div style={{ position: "absolute", top: "45%" }}>
+          {/* <div className="rolling-square" style={rotation}></div> */}
+          <div className="my-input shown-question">
+            {currentQuestion.question}
+          </div>
+          <StartingTimer time={startingTime!} setTime={setStartingTime} bonusStyling={{display: 'none'}} />
         </div>
+        </>
       )}
       {showQuestion && (
         <>

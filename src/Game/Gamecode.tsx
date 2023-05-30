@@ -23,7 +23,9 @@ export default function Gamecode() {
     currentQuestion:0,
     time:state.template.questionTime,
     gamePhase:1,
-    startingTime:3
+    startingTime:3,
+    winners:[],
+    hostConnection:true
   });
 
   const [startDisabled, setStartDisabled] = useState(true);
@@ -37,6 +39,8 @@ export default function Gamecode() {
   useEffect(() => {
     if (game.players.length >= 1) {
       setStartDisabled(false);
+    }else{
+      setStartDisabled(true)
     }
   }, [game.players]);
 

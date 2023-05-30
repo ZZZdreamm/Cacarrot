@@ -7,14 +7,25 @@ import { getClaims } from "./auth/HandleJWT";
 import AuthenticationContext from "./auth/AuthenticationContext";
 import { ModalProvider } from "styled-react-modal";
 import Menu from "./MainComponents/Menu";
-import UnloadPrompt from "./Utilities/UnloadPrompt";
-import { Socket } from "socket.io";
-import { io } from "socket.io-client";
+import { IsOnline } from "./Utilities/IsOnline";
+import OfflineWebsite from "./Utilities/OfflineWebsite";
+import ChooseAbility from "./Game/ChooseAbility";
 
 function App() {
-
   const [claims, setClaims] = useState<claim[]>([]);
 
+  const [online, setOnline] = useState(true);
+
+  useEffect(() => {
+    setOnline(navigator.onLine)
+    IsOnline(setOnline);
+  }, []);
+
+  useEffect(() => {
+    if (!online) {
+      console.log("we ofline");
+    }
+  }, [online]);
 
   useEffect(() => {
     setClaims(getClaims());
@@ -26,18 +37,24 @@ function App() {
       <ModalProvider>
         <div className="App">
           <main className="wrapper">
-            <Menu />
-            <section className="landing-page">
-              <Routes>
-                {routes.map((route) => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    Component={route.component}
-                  />
-                ))}
-              </Routes>
-            </section>
+            {online ? (
+              <>
+                <Menu />
+                <section className="landing-page">
+                  <Routes>
+                    {routes.map((route) => (
+                      <Route
+                        key={route.path}
+                        path={route.path}
+                        Component={route.component}
+                      />
+                    ))}
+                  </Routes>
+                </section>
+              </>
+            ) : (
+              <OfflineWebsite />
+            )}
           </main>
         </div>
       </ModalProvider>

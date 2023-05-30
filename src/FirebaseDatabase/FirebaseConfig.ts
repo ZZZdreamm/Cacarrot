@@ -14,7 +14,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 //@ts-ignore
-const dbRef = firebase.database().ref()
+export const db = firebase.database()
+export const dbRef = firebase.database().ref()
 export const usersRef = dbRef.child('users')
 export const gamesRef = dbRef.child('games')
 

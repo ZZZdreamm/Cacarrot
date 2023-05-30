@@ -4,19 +4,19 @@ import SingleWinner from "./SingleWinners";
 
 export default function Winners({ winners }: WinnersProps) {
   const navigate = useNavigate();
-  const winnersToMap = [{name:winners[0].name, points: winners[0].points, statsColor:"#ffd700"},
-  {name:winners[1] ? winners[1].name : null, points: winners[1] ? winners[1].points : 0, statsColor:"#C0C0C0"},
-  {name:winners[2] ? winners[2].name : null, points: winners[2] ? winners[2].points : 0, statsColor:"#CD7F32"}
+  const winnersToMap = [{name:winners[0].name, points: winners[0].points, statsColor:"#ffd700", winImage:'first-place.png'},
+  {name:winners[1] ? winners[1].name : null, points: winners[1] ? winners[1].points : 0, statsColor:"#C0C0C0", winImage:'second-place.jpg'},
+  {name:winners[2] ? winners[2].name : null, points: winners[2] ? winners[2].points : 0, statsColor:"#CD7F32", winImage:'third-place.jpg'}
 ]
   return (
     <>
       <div
         className="player-stats-list column-shaped-container"
-        style={{ margin: "10% 0 0 0", maxHeight: "40%"}}
+        style={{ margin: "10% 0 0 0", maxHeight: "40%", overflow:'visible'}}
       >
         <h1>Winners</h1>
         {winnersToMap.map((winner) =>(
-          winner.name && <SingleWinner key={winner.name} name={winner.name} points={winner.points} statsColor={winner.statsColor}/>
+          winner.name && <SingleWinner key={winner.name} name={winner.name} points={winner.points} statsColor={winner.statsColor} winImage={winner.winImage}/>
         ))}
 
         <button

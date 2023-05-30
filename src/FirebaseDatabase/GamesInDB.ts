@@ -1,5 +1,7 @@
 import { Game, Player } from "../Game/game.models";
-import { gamesRef } from "./FirebaseConfig";
+import { db, dbRef, gamesRef } from "./FirebaseConfig";
+import { getDatabase, ref, onValue } from "firebase/database";
+
 
 export async function createGameInDB(game:Game) {
     const recordQuery = gamesRef.orderByChild('name').equalTo(game.gamecode);
@@ -34,6 +36,27 @@ export async function createGameInDB(game:Game) {
     })
   }
 
+  export async function checkIfUniqueName(gamecode:string, name:string, setGoodName:(e:any) => void, setError:(e:any) => void) {
+    let unique = true
+    await gamesRef.child(gamecode).child('players').once('value', (snapshot) => {
+      const players = snapshot.val()
+      if(players){
+        Object.values(players).forEach((player:any) => {
+          if(player.name == name){
+            unique = false
+          }
+        })
+      }
+    })
+    console.log(unique)
+    if(unique){
+      setGoodName(true)
+    }else{
+      setError('There is player with that name')
+    }
+
+  }
+
   export async function getGameData(gamecode:string, setGame:any, turnOffAfter?:boolean) {
     gamesRef.child(gamecode).on('value', (dataSnapshot) => {
       const gameData = dataSnapshot.val()
@@ -60,11 +83,21 @@ export async function createGameInDB(game:Game) {
   }
 
 
-  export async function joinGame(gamecode:string, player:Player) {
+  export async function joinGame(gamecode:string, player:Player, setPlayerId:(id:number) => void) {
       gamesRef.child(gamecode).child('players').once('value', (snapshot) =>{
         const players = snapshot.val()
-        var playersCount = players ? Object.keys(players).length : 0
-        gamesRef.child(gamecode).child('players').child(`${playersCount}`).set(player)
+        let playerNumber = 0
+        if(players){
+          Object.keys(players).forEach((playerKey:string) => {
+            if(parseInt(playerKey) == playerNumber){
+              playerNumber += 1
+            }
+          })
+        }
+        player.id = playerNumber
+        setPlayerId(playerNumber)
+
+        gamesRef.child(gamecode).child('players').child(`${playerNumber}`).set(player)
       })
   }
 
@@ -131,6 +164,21 @@ export async function createGameInDB(game:Game) {
   })
   }
 
+  export async function setPointsForAnotherPlayer(gamecode:string, playerName:string, addedPoints:number) {
+    gamesRef.child(gamecode).child('players').once('value', (snapshot) => {
+      const players = snapshot.val()
+      players.forEach((player:Player) => {
+        if(player.name == playerName){
+          gamesRef.child(gamecode).child('players').child(`${player.id}`).child('points').once('value', (snapshot) => {
+            const points = snapshot.val()
+            const newPoints = points + addedPoints
+            gamesRef.child(gamecode).child('players').child(`${player.id}`).child('points').set(newPoints)
+          })
+        }
+      });
+  })
+  }
+
   export async function getTimeFromDB(gamecode:string, setTime:any) {
     gamesRef.child(gamecode).child('time').on('value', (snapshot) => {
       const time = snapshot.val()
@@ -160,10 +208,27 @@ export async function createGameInDB(game:Game) {
      })
   }
 
+  export async function getOnHostShowing(gamecode:string, setHostShowing: (e:any) => void) {
+    gamesRef.child(gamecode).child('hostShowing').on('value', (snapshot) => {
+     const shownComponent = snapshot.val()
+     if(shownComponent){
+       setHostShowing(shownComponent)
+     }
+    })
+ }
+
   export async function getOnStartingTime(gamecode:string, setStartingTime:(time:number) => void) {
     gamesRef.child(gamecode).child('startingTime').on('value', (snapshot) => {
       const time = snapshot.val()
       setStartingTime(time)
+    })
+  }
+
+
+  export async function getOnWinners(gamecode:string, setWinners:(winners:Player[]) => void) {
+    gamesRef.child(gamecode).child('winners').on('value', (snapshot) => {
+      const winners = snapshot.val()
+      setWinners(winners)
     })
   }
 
@@ -192,12 +257,19 @@ export async function createGameInDB(game:Game) {
       await gamesRef.child(gamecode).child('started').set(data)
     }else if(actionType == 'startingTime'){
       await gamesRef.child(gamecode).child('startingTime').set(data)
+    }else if(actionType == 'winners'){
+      await gamesRef.child(gamecode).child('winners').set(data)
+    }else if(actionType == 'hostShowing'){
+      await gamesRef.child(gamecode).child('hostShowing').set(data)
     }
   }
 
   export const fetchData = async (gamecode:string, data :any, setData:(e:any) => void, actionType:string, playerId?:number) => {
     const snapshot :any = await chooseTypeOnce(actionType, gamecode, playerId)
     let fetchedData = snapshot.val();
+    if(actionType == 'hostConnection'){
+      console.log(fetchedData)
+    }
     if(typeof data == 'number'){
       if (typeof fetchedData == 'number') {
         setData(fetchedData);
@@ -235,5 +307,24 @@ export async function createGameInDB(game:Game) {
       return await gamesRef.child(gamecode).child('players').child(`${playerId}`).child('lastAnswer').once('value')
     }else if(actionType == 'startingTime'){
       return await gamesRef.child(gamecode).child('startingTime').once('value')
+    }else if(actionType == 'winners'){
+      return await gamesRef.child(gamecode).child('winners').once('value')
+    }else if(actionType == 'hostConnection'){
+      return await gamesRef.child(`${gamecode}/hostConnection`).once('value')
+    }else if(actionType == 'hostShowing'){
+      return await gamesRef.child(gamecode).child('hostShowing').once('value')
     }
   }
+
+
+ export const connectedRef = ref(db, ".info/connected");
+
+
+ export function getOnIfHostConnected(gamecode:string, setConnected:(e:any) => void){
+  gamesRef.child(gamecode).child('hostConnection').on('value', (snapshot) => {
+    const hostConnected = snapshot.val()
+    console.log(hostConnected)
+    setConnected(hostConnected)
+  })
+ }
+

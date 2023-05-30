@@ -24,7 +24,9 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
     currentQuestion: 0,
     time: gameState.template.questionTime,
     gamePhase: 1,
-    startingTime:3
+    startingTime:3,
+    winners:[],
+    hostConnection:true
   };
   if (fetchedData) {
     const {
@@ -35,8 +37,10 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
       currentQuestion,
       time,
       gamePhase,
-      startingTime
-    } = fetchedData;
+      startingTime,
+      winners,
+      hostConnection
+    } = fetchedData??{};
     let myPlayers: any = players
       ? Object.values(players).map((player: any) => {
           const { id, name, points, lastAnswer, shownComponent } = player ?? {};
@@ -58,7 +62,9 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
       currentQuestion,
       time,
       gamePhase,
-      startingTime
+      startingTime,
+      winners,
+      hostConnection
     };
     setGame(transformedData);
   } else {
@@ -67,10 +73,22 @@ export const fetchGame = async (gameState: any, setGame: (e: any) => void) => {
 };
 
 export function getWinners(players: Player[], setWinners: (e: any) => void) {
-  let localWinners = players.sort(
+  let sortedPlayers = players.sort(
     (player1, player2) => player2.points - player1.points
   );
-  setWinners([localWinners[0], localWinners[1], localWinners[2]]);
+  const localWinners = sortedPlayers.slice(0, 2)
+  setWinners(localWinners);
 }
 
 
+export function getSortedPlayers(players: Player[], setPlayers: (e: any) => void) {
+  let sortedPlayers = players.sort(
+    (player1, player2) => player2.points - player1.points
+  );
+  setPlayers(sortedPlayers);
+}
+
+
+export function playerLeavesGame(gamecode:string, playerId:number){
+  gamesRef.child(gamecode).child('players').child(`${playerId}`).remove()
+}
