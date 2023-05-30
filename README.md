@@ -8,6 +8,7 @@ Game consists of few stages:
 - host alternately shows questions and current points of all players
 - players answers current question shown on host device and see if they answer was correct or not
 - after whole set of questions on all devices there are shown winners of game
+
 If while waiting for players to join, player enters a game and leave the game before start he is erased from game to not take 
 slot for others.
 If host closes website he have 15 seconds to come back to game or else game is considered closed and players will get communicate about
