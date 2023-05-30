@@ -12,7 +12,6 @@ export default function WaitingRoom() {
   const navigate = useNavigate();
   const [gameStart, setGameStart] = useState('waiting');
 
-  console.log(data)
 
   const playerRef = gamesRef.child(data.game.gamecode).child('players').child(`${data.playerId}`)
   const disconnectHandler = playerRef.onDisconnect()

@@ -19,6 +19,12 @@ export default function AnswerPage({
   setLastAnswer
 }: AnswerPageProps) {
   const [answerSended, setAnswerSended] = useState(false);
+  const [startingTime, setStartingTime] = useState<number>(3)
+  const [rotation, setRotation] = useState({});
+
+  useEffect(()=>{
+    getOnStartingTime(gameState.gamecode, setStartingTime)
+  },[])
 
   const sendAnswer = (answer: string) => {
     return async () => {
@@ -49,18 +55,13 @@ export default function AnswerPage({
   }, [time]);
 
   useEffect(() => {
-    if (time < 1 && !answerSended) {
+    console.log(answerSended)
+    if (!answerSended) {
       sendAnswer("");
     }
   }, [answerSended]);
 
-  const [startingTime, setStartingTime] = useState<number>(3)
-  const [showQuestion, setShowQuestion] = useState(false);
-  const [rotation, setRotation] = useState({});
 
-  useEffect(()=>{
-    getOnStartingTime(gameState.gamecode, setStartingTime)
-  },[])
 
   useEffect(() => {
     if(startingTime || startingTime == 0){
@@ -79,7 +80,7 @@ export default function AnswerPage({
           <StartingTimer
             time={startingTime}
             setTime={()=>{}}
-            bonusStyling={{marginTop:'0'}}
+            bonusStyling={{marginTop:'0', position:'absolute'}}
           />
         </div>
       )}
