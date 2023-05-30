@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Cacarrot/static/css/main.a0691cfd.css",
-    "main.js": "/Cacarrot/static/js/main.eb905d02.js",
+    "main.css": "/Cacarrot/static/css/main.429649b7.css",
+    "main.js": "/Cacarrot/static/js/main.3af55955.js",
     "static/js/787.f5079acd.chunk.js": "/Cacarrot/static/js/787.f5079acd.chunk.js",
     "index.html": "/Cacarrot/index.html",
-    "main.a0691cfd.css.map": "/Cacarrot/static/css/main.a0691cfd.css.map",
-    "main.eb905d02.js.map": "/Cacarrot/static/js/main.eb905d02.js.map",
+    "main.429649b7.css.map": "/Cacarrot/static/css/main.429649b7.css.map",
+    "main.3af55955.js.map": "/Cacarrot/static/js/main.3af55955.js.map",
     "787.f5079acd.chunk.js.map": "/Cacarrot/static/js/787.f5079acd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a0691cfd.css",
-    "static/js/main.eb905d02.js"
+    "static/css/main.429649b7.css",
+    "static/js/main.3af55955.js"
   ]
 }
