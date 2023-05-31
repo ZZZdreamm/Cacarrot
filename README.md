@@ -16,6 +16,8 @@ it being abandoned.
 State of game on every device is being consistent after refresh of page by getting data from firebase database before rendering whole game component.
 You can't create game on phone because it is too small for showing answers in game anyway, so host must be on bigger device.
 
+If you are not logged most of routes are blocked for you and you will be redirected to login.
+
 TODO:
 - between questions add possibility for players to buy special bonuses that will affect them or other players for their points
 
