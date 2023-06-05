@@ -8,6 +8,7 @@ import {
 } from "../FirebaseDatabase/GamesInDB";
 import { Answer, Player } from "./game.models";
 import ChooseAbility from "./ChooseAbility";
+import Waiting from "../Utilities/Waiting";
 
 //@ts-ignore
 export default function BetweenQuestions({
@@ -21,7 +22,7 @@ export default function BetweenQuestions({
   player,
   points,
   setPoints,
-  setActiveEffects
+  setActiveEffects,
 }: BetweenQuestionsProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [componentState, setComponentState] = useState("showingAnswer");
@@ -38,7 +39,7 @@ export default function BetweenQuestions({
 
   useEffect(() => {
     if (currentQuestion > questionDone) {
-      console.log('alo')
+      console.log("alo");
       setTime(gameState.gameTemplate.questionTime);
       setLastQuestionPoints(0);
       setShownComponent("answers");
@@ -46,7 +47,10 @@ export default function BetweenQuestions({
   }, [currentQuestion]);
 
   useEffect(() => {
-    // if (gameState.gamePhase % 2 == 0) {
+    // if (
+    //   gameState.gamePhase % 2 == 0 &&
+    //   gameState.gamePhase < gameState.gameTemplate.allQuestions.length * 2 - 1
+    // ) {
     //   setComponentState("choosingAbility");
     // } else {
       setComponentState("showingAnswer");
@@ -72,7 +76,19 @@ export default function BetweenQuestions({
           </div>
         </>
       )}
-      {/* {componentState == "choosingAbility" && <ChooseAbility gameState={gameState} player={player} setPoints={setPoints} setActiveEffects={setActiveEffects} points={points} />} */}
+      {/* {componentState == "choosingAbility" && (
+        <ChooseAbility
+          gameState={gameState}
+          player={player}
+          setPoints={setPoints}
+          setActiveEffects={setActiveEffects}
+          points={points}
+          setComponentState={setComponentState}
+        />
+      )} */}
+      {componentState == "waitingForOthers" && (
+        <Waiting message="Wait for other players" />
+      )}
     </>
   );
 }
@@ -85,8 +101,8 @@ interface BetweenQuestionsProps {
   setTime: (time: number) => void;
   lastQuestionPoints: number;
   setLastQuestionPoints: (points: number) => void;
-  player:Player;
-  points:number;
-  setPoints:(points:number) => void;
-  setActiveEffects:(effects:string[]) => void;
+  player: Player;
+  points: number;
+  setPoints: (points: number) => void;
+  setActiveEffects: (effects: string[]) => void;
 }

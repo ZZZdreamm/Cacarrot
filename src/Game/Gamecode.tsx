@@ -9,6 +9,10 @@ import {
 } from "../FirebaseDatabase/GamesInDB";
 import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
 import { fetchGame, startGame } from "./FunctionsGame";
+import { io } from "socket.io-client";
+import { serverURL } from "../apiPaths";
+import { socket } from "../App";
+
 
 export default function Gamecode() {
   const location = useLocation();
@@ -33,6 +37,7 @@ export default function Gamecode() {
   useEffect(() => {
     fetchGame(state, setGame)
     getGameData(game!.gamecode, setGame);
+    socket.emit('gamecode', game.gamecode)
   }, []);
 
 

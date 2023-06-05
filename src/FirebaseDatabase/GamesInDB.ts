@@ -458,7 +458,7 @@ export const fetchData = async (
 ) => {
   const snapshot: any = await chooseTypeOnce(actionType, gamecode, playerId);
   let fetchedData = snapshot.val();
-  if (actionType == "hostConnection") {
+  if (actionType == "shownComponent") {
     console.log(fetchedData);
   }
   if (typeof data == "number") {

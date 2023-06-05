@@ -11,7 +11,7 @@ export const DoubleNext = (
   setActiveEffects: any,
   enemyName?: string,
 ) => {
-    console.log(playerName)
+    console.log('double next')
   setPoints((points: number) => {
     const pointsLeft = points - 500;
     setPointsForPlayer(gamecode, playerName, pointsLeft);
@@ -31,6 +31,7 @@ export const EraseEnemyPoints = (
   setActiveEffects: any,
   enemyName: string,
 ) => {
+  console.log('erase points')
   setPoints((points: number) => {
     setPointsForPlayer(gamecode, playerName, points - 500);
     const pointsLeft = points - 500;

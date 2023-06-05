@@ -21,8 +21,9 @@ import UnloadPrompt from "../Utilities/UnloadPrompt";
 import BetweenQuestions from "./BetweenQuestions";
 import { getWinners, playerLeavesGame } from "./FunctionsGame";
 import { IfConnected } from "../Utilities/Connected";
-import WaitingForConnection from "../Utilities/WaitingForConnection";
 import PlayerBar from "./Player";
+import Waiting from "../Utilities/Waiting";
+import { socket } from "../App";
 
 export default function GamePlayer() {
   const location = useLocation();
@@ -58,6 +59,8 @@ export default function GamePlayer() {
   const playerName = state.username
     ? state.username
     : localStorage.getItem(`username/${state.playerNumber}`);
+
+
 
   useEffect(() => {
     getGameData(state.game.gamecode, setGame);
@@ -121,7 +124,6 @@ export default function GamePlayer() {
         shownComponent == "between" &&
         game.gamePhase % 2 == 1
       ) {
-        console.log('gamephase mnei zmienil')
         setShownComponent("answers");
       }
   }, [game.gamePhase]);
@@ -141,21 +143,25 @@ export default function GamePlayer() {
   }, [shownComponent]);
 
   function setPointsGivenLast(answer: Answer) {
-    if (
-      game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer ==
-        answer.choosenAnswer &&
-      game.currentQuestion == answer.questionNumber
-    ) {
-      setPoints((points) => {
-        const newPoints = 1000 - minusPointsForSecond * answer.sendingTime;
-        setLastQuestionPoints(newPoints);
-        setPoints(points + newPoints);
-        setPointsForPlayer(game.gamecode, state.username, points + newPoints);
-        return points + newPoints;
-      });
-    }else{
-      setLastQuestionPoints(0);
-    }
+    socket.emit("send-answer", {gamecode:game.gamecode, answer:answer})
+    // if (
+    //   game.gameTemplate.allQuestions[game.currentQuestion].correctAnswer ==
+    //     answer.choosenAnswer &&
+    //   game.currentQuestion == answer.questionNumber
+    // ) {
+    //   setPoints((points) => {
+    //     let newPoints = 1000 - minusPointsForSecond * answer.sendingTime;
+    //     if(activeEffects.includes('DoubleNext')){
+    //       newPoints = newPoints*2
+    //     }
+    //     setLastQuestionPoints(newPoints);
+    //     setPoints(points + newPoints);
+    //     setPointsForPlayer(game.gamecode, state.username, points + newPoints);
+    //     return points + newPoints;
+    //   });
+    // }else{
+    //   setLastQuestionPoints(0);
+    // }
   }
 
   return (
@@ -194,8 +200,9 @@ export default function GamePlayer() {
           )}
         </>
       ) : (
-        <WaitingForConnection time={reconnectionTime} setTime={setReconnectionTime}/>
-      )}
+        <Waiting message="Waiting for host to reconnect" time={reconnectionTime} setTime={setReconnectionTime}/>
+      )
+      }
     </>
   );
 }

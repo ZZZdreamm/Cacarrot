@@ -16,7 +16,7 @@ export default function CreateGame() {
   const [templates, setTemplates] = useState<GameTemplate[]>([]);
 
   useEffect(()=>{
-    const userId = localStorage.getItem('id')
+    const userId = localStorage.getItem("id")
     getUserTemplates(userId!, setTemplates)
   },[])
 
@@ -41,6 +41,8 @@ export default function CreateGame() {
   function randomNumberInRange(min:number, max:number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  const noTemplates = !choosenTemplate ? true : false
   return (
     <>
       <section className="flex-section">
@@ -64,6 +66,7 @@ export default function CreateGame() {
                 />
               </>
             }
+            disableSubmit={noTemplates}
             submitButtonText={"Choose"}
             onSubmit={() => {
               const gameProps = {
@@ -98,6 +101,7 @@ export default function CreateGame() {
                 />
               </>
             }
+            disableSubmit={noTemplates}
             submitButtonText={"Choose"}
             onSubmit={() => {
               navigate("/edit-template", { state: choosenTemplate });

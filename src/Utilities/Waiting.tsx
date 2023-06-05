@@ -4,7 +4,8 @@ import StartingTimer from "../Game/StartingTimer";
 import { ReadyImagesURL } from "../appUrls";
 
 //@ts-ignore
-export default function WaitingForConnection({
+export default function Waiting({
+  message,
   time,
   setTime,
 }: StartingTimerProps) {
@@ -23,7 +24,7 @@ export default function WaitingForConnection({
             src={`${ReadyImagesURL}/loading.gif`}
             style={{ height: "30rem", width: "30rem" }}
           />
-          <h1>Waiting for connection</h1>
+          <h1>{message}</h1>
           <StartingTimer
             time={time!}
             setTime={setTime!}
@@ -38,6 +39,7 @@ export default function WaitingForConnection({
 }
 
 interface StartingTimerProps {
+  message:string;
   time?: number;
   setTime?: (time: number) => void;
 }

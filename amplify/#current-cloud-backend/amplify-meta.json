@@ -1,0 +1,67 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyeb5c0ed8f3174-staging-124736-authRole",
+      "UnauthRoleArn": "arn:aws:iam::068425765170:role/amplify-amplifyeb5c0ed8f3174-staging-124736-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::068425765170:role/amplify-amplifyeb5c0ed8f3174-staging-124736-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-amplifyeb5c0ed8f3174-staging-124736-deployment",
+      "UnauthRoleName": "amplify-amplifyeb5c0ed8f3174-staging-124736-unauthRole",
+      "StackName": "amplify-amplifyeb5c0ed8f3174-staging-124736",
+      "StackId": "arn:aws:cloudformation:us-east-1:068425765170:stack/amplify-amplifyeb5c0ed8f3174-staging-124736/51eb68f0-ffb1-11ed-8c44-0a358fa619a3",
+      "AmplifyAppId": "d3828hbepegmzi"
+    }
+  },
+  "auth": {
+    "CacarrotServer": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 20,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS",
+            "REQUIRES_UPPERCASE"
+          ]
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifyeb5c0ed8f3174-staging-124736-deployment/amplify-cfn-templates/auth/CacarrotServer-cloudformation-template.json",
+        "logicalId": "authCacarrotServer"
+      },
+      "lastPushTimeStamp": "2023-05-31T12:59:33.968Z",
+      "output": {
+        "UserPoolId": "us-east-1_A8EATk0Xx",
+        "AppClientIDWeb": "5cppjuv6n310vld0c72281178f",
+        "AppClientID": "5s5os8meuvghg7grlmbctmuesi",
+        "HostedUIDomain": "hismu77yr0i8-staging",
+        "IdentityPoolId": "us-east-1:72d028ba-a1a7-4ded-9476-67308378df28",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:068425765170:userpool/us-east-1_A8EATk0Xx",
+        "IdentityPoolName": "testAuthIdentityPool__staging",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
+        "UserPoolName": "CacarrotServer"
+      },
+      "lastPushDirHash": "uXEWLOUdlL8qRK1CNce7d5KrlXc="
+    }
+  }
+}

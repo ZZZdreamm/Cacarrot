@@ -314,7 +314,7 @@ form{
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30;
+  z-index: 40;
 }
 .player-stats-list{
   margin: 10% 0;

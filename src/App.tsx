@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import routes from "./routes";
+import routes, { guardedRoutes } from "./routes";
 import { claim } from "./auth/auth.models";
 import { getClaims } from "./auth/HandleJWT";
 import AuthenticationContext from "./auth/AuthenticationContext";
@@ -10,6 +10,12 @@ import Menu from "./MainComponents/Menu";
 import { IsOnline } from "./Utilities/IsOnline";
 import OfflineWebsite from "./Utilities/OfflineWebsite";
 import ChooseAbility from "./Game/ChooseAbility";
+import { firestore } from "./FirebaseDatabase/FirebaseConfig";
+import GuardedRoute from "./Utilities/GuardedRoute";
+import { io } from "socket.io-client";
+import { serverURL } from "./apiPaths";
+
+export const socket = io(serverURL)
 
 function App() {
   const [claims, setClaims] = useState<claim[]>([]);
@@ -17,20 +23,14 @@ function App() {
   const [online, setOnline] = useState(true);
 
   useEffect(() => {
-    setOnline(navigator.onLine)
+    setClaims(getClaims());
+    setOnline(navigator.onLine);
     IsOnline(setOnline);
   }, []);
 
   useEffect(() => {
-    if (!online) {
-      console.log("we ofline");
-    }
-  }, [online]);
-
-  useEffect(() => {
     setClaims(getClaims());
   }, [localStorage]);
-
 
   return (
     <AuthenticationContext.Provider value={{ claims, update: setClaims }}>
@@ -48,6 +48,17 @@ function App() {
                         path={route.path}
                         Component={route.component}
                       />
+                    ))}
+
+                    {guardedRoutes.map((route) => (
+                      <Route
+                        key={route.path}
+                        element={
+                          <GuardedRoute isAuthenticated={claims.length > 0} />
+                        }
+                      >
+                        <Route Component={route.component} path={route.path} />
+                      </Route>
                     ))}
                   </Routes>
                 </section>

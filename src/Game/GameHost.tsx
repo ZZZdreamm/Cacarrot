@@ -14,8 +14,8 @@ import {
 } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import { getSortedPlayers, getWinners } from "./FunctionsGame";
-import WaitingForConnection from "../Utilities/WaitingForConnection";
 import { HostConnection } from "../FirebaseDatabase/ConnectedToDB";
+import Waiting from "../Utilities/Waiting";
 
 
 export default function GameHost() {
@@ -88,19 +88,21 @@ export default function GameHost() {
 
   useEffect(() => {
     if (time || time == 0) {
-      setDataInDB(game.gamecode, time, "time");
-      if (time < 1 && gamePhase) {
-        setGame({
-          ...game,
-          gamePhase: game.gamePhase + 1,
-        });
-        setGamePhase(gamePhase + 1);
-        setDataInDB(game.gamecode, game.gamePhase + 1, "gamePhase");
-        if(gamePhase+1 == game.gameTemplate.allQuestions.length * 2 + 1){
-          setDataInDB(game.gamecode, "winners", "gameStarted");
-          getWinners(players, setWinners);
+      setTimeout(() => {
+        setDataInDB(game.gamecode, time, "time");
+        if (time < 1 && gamePhase) {
+          setGame({
+            ...game,
+            gamePhase: game.gamePhase + 1,
+          });
+          setGamePhase(gamePhase + 1);
+          setDataInDB(game.gamecode, game.gamePhase + 1, "gamePhase");
+          if(gamePhase+1 == game.gameTemplate.allQuestions.length * 2 + 1){
+            setDataInDB(game.gamecode, "winners", "gameStarted");
+            getWinners(players, setWinners);
+          }
         }
-      }
+      }, 200);
     }
   }, [time]);
   useEffect(() => {
@@ -158,7 +160,7 @@ export default function GameHost() {
           )}
           {shownComponent == "winners" && <Winners winners={winners} />}
         </div>
-      ) : <WaitingForConnection/>}
+      ) : <Waiting message="Waiting for connection"/>}
     </>
   );
 }

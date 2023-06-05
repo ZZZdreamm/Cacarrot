@@ -3,14 +3,9 @@ import { profileDTO } from "./profiles.models";
 
 
 
-export function saveProfile(profileData:profileDTO){
-    localStorage.setItem("id",profileData.id);
-    localStorage.setItem("email",profileData.email);
-    if(profileData.profileImage){
-        localStorage.setItem("profileImage",profileData.profileImage);
-    }else{
-        localStorage.setItem("profileImage", `${ReadyImagesURL}/noProfile.jpg`)
-    }
+export function saveProfile(userId:string, email:string){
+    localStorage.setItem("id",userId);
+    localStorage.setItem("email",email);
 }
 export function getProfile(): profileDTO{
     const id = localStorage.getItem("id");

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  checkIfAnswerSended,
-  fetchData,
   getOnStartingTime,
   sendAnswerToDB,
 } from "../FirebaseDatabase/GamesInDB";
@@ -18,7 +16,6 @@ export default function AnswerPage({
   setPointsForLast,
   setLastAnswer
 }: AnswerPageProps) {
-  const [answerSended, setAnswerSended] = useState(false);
   const [startingTime, setStartingTime] = useState<number>(3)
   const [rotation, setRotation] = useState({});
 
@@ -36,7 +33,6 @@ export default function AnswerPage({
         gameState.currentQuestion,
         sendingTime
       );
-      setAnswerSended(true);
       const yourAnswer = {
         choosenAnswer: answer,
         sendingTime: sendingTime,
@@ -50,24 +46,16 @@ export default function AnswerPage({
 
   useEffect(() => {
     if (time < 1) {
-      checkIfAnswerSended(gameState.gamecode, username, setAnswerSended);
+      setShownComponent("between");
     }
   }, [time]);
-
-  useEffect(() => {
-    console.log(answerSended)
-    if (!answerSended) {
-      sendAnswer("");
-    }
-  }, [answerSended]);
-
-
 
   useEffect(() => {
     if(startingTime || startingTime == 0){
         onTimeChange(3 - startingTime);
     }
   }, [startingTime]);
+  
   function onTimeChange(rotationNumber: number) {
     setRotation({ transform: `rotate(${rotationNumber * 90}deg)` });
   }

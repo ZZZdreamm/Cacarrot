@@ -2,7 +2,8 @@ import { GameTemplate } from "../Game/game.models";
 import { Question } from "./questions.models";
 import { saveTemplateInDB } from "../FirebaseDatabase/TemplatesInDB";
 
-let uuidv4 = () => {
+
+export let uuidv4 = () => {
   let s4 = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)
@@ -30,7 +31,7 @@ export function saveTemplate(
   questionTime: number,
   gameId?: string
 ) {
-  const userId = localStorage.getItem("id");
+  const userId = localStorage.getItem("id")
   let validQuestions: Question[] = [];
   questions.forEach((question: Question) => {
     if (validateQuestion(question)) {

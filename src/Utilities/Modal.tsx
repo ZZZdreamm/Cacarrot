@@ -16,6 +16,7 @@ export default function MyModal({
   children,
   submitButtonText,
   onSubmit,
+  disableSubmit
 }:MyModalProps) {
   return (
     <StyledModal
@@ -26,6 +27,7 @@ export default function MyModal({
       {children}
       <div>
         <button
+        disabled={disableSubmit}
           onClick={() => {
             toggleModal();
             onSubmit();
@@ -46,4 +48,5 @@ interface MyModalProps{
   children:any;
   submitButtonText:string;
   onSubmit:any;
+  disableSubmit?:boolean
 }

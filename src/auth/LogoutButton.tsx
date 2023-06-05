@@ -10,6 +10,7 @@ export default function LogoutButton() {
     <button
       onClick={() => {
         logout();
+        localStorage.removeItem('username')
         update([]);
         navigate("/");
         navigate(0);

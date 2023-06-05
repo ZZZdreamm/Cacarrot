@@ -1,11 +1,17 @@
 import { userCredentials } from "./auth.models";
 import { useFormik } from "formik";
 import { basicSchema } from "./Schemas";
+import { useState } from "react";
 
 export default function AuthForm(props: authFormProps, ifRegister: boolean) {
+  const [submission, setSubmission] = useState(false)
   //@ts-ignore
   const onSubmit = (values, actions) => {
       props.onSubmit(values)
+      setSubmission(true)
+      setTimeout(()=>{
+        setSubmission(false)
+      },3000)
   }
   const {values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting} = useFormik({
     initialValues: {
@@ -41,7 +47,7 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
         placeholder="Enter your password"
       />
       {touched.password && errors.password && <div className="error">{errors.password}</div>}
-      <button disabled={isSubmitting} type="submit">Submit</button>
+      <button disabled={submission} type="submit">Submit</button>
     </form>
   );
 }
