@@ -4,24 +4,24 @@ import { Answer, Player } from "./game.models";
 import ChooseAbility from "./ChooseAbility";
 import Waiting from "../Utilities/Waiting";
 
-//@ts-ignore
 export default function BetweenQuestions({
   gameState,
   lastQuestionPoints,
+  player
 }: BetweenQuestionsProps) {
   const [componentState, setComponentState] = useState("showingAnswer");
 
 
 
   useEffect(() => {
-    // if (
-    //   gameState.gamePhase % 2 == 0 &&
-    //   gameState.gamePhase < gameState.gameTemplate.allQuestions.length * 2 - 1
-    // ) {
-    //   setComponentState("choosingAbility");
-    // } else {
+    if (
+      gameState.gamePhase % 2 == 0 &&
+      gameState.gamePhase < gameState.gameTemplate.allQuestions.length * 2 - 1
+    ) {
+      setComponentState("choosingAbility");
+    } else {
       setComponentState("showingAnswer");
-    // }
+    }
   }, [gameState.gamePhase]);
 
   const answerEffectImage =
@@ -43,18 +43,14 @@ export default function BetweenQuestions({
           </div>
         </>
       )}
-      {/* {componentState == "choosingAbility" && (
+      {componentState == "choosingAbility" && (
         <ChooseAbility
           gameState={gameState}
           player={player}
-          setPoints={setPoints}
-          setActiveEffects={setActiveEffects}
-          points={points}
-          setComponentState={setComponentState}
-        />
-      )} */}
+          setComponentState={setComponentState}     />
+      )}
       {componentState == "waitingForOthers" && (
-        <Waiting message="Wait for other players" setTime={()=>{}} />
+        <Waiting message="Wait for other players" setTime={() => { } } possibleLeave={false} />
       )}
     </>
   );
@@ -63,4 +59,5 @@ export default function BetweenQuestions({
 interface BetweenQuestionsProps {
   gameState: any;
   lastQuestionPoints: number;
+  player:Player;
 }

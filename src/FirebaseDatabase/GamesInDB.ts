@@ -177,6 +177,23 @@ export async function getOnShownComponent(
     });
 }
 
+export async function getOnPlayer(
+  gamecode: string,
+  playerId: number,
+  setPlayer: (e: any) => void
+) {
+  gamesRef
+    .child(gamecode)
+    .child("players")
+    .child(`${playerId}`)
+    .on("value", (snapshot) => {
+      const player = snapshot.val();
+      if (player) {
+        setPlayer(player);
+      }
+    });
+}
+
 //
 export async function getOnStartingTime(
   gamecode: string,
@@ -346,7 +363,7 @@ async function chooseTypeOnce(
       .child(gamecode)
       .child("currentQuestion")
       .once("value");
-  } else if (actionType == "points") {
+  }else if (actionType == "points") {
     return await gamesRef
       .child(gamecode)
       .child("players")

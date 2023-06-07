@@ -8,6 +8,7 @@ import {
   getOnWinners,
   fetchPlayerData,
   getOnPlayerPoints,
+  getOnPlayer,
 } from "../FirebaseDatabase/GamesInDB";
 import { useLocation } from "react-router-dom";
 import { Game, Player } from "./game.models";
@@ -44,7 +45,7 @@ export default function GamePlayer() {
     : localStorage.getItem(`username/${state.playerNumber}`);
 
   useEffect(() => {
-    socket.emit('gamecode', state.game.gamecode)
+    socket.emit("gamecode", state.game.gamecode);
     getGameData(state.game.gamecode, setGame);
   }, []);
 
@@ -84,9 +85,10 @@ export default function GamePlayer() {
             "shownComponent",
             player.id
           );
+          getOnPlayer(game.gamecode, player.id, setPlayer)
           getOnShownComponent(game.gamecode, player.id, setShownComponent);
-          getOnPlayerPoints(game.gamecode, player.id, setPoints)
-          setShowPage(true)
+          getOnPlayerPoints(game.gamecode, player.id, setPoints);
+          setShowPage(true);
         };
         getData();
       }
@@ -110,52 +112,54 @@ export default function GamePlayer() {
     }
   }, [shownComponent]);
 
-
-  useEffect(()=>{
-    if(player && game.players){
-      setLastQuestionPoints(pointsForLast(game, player!.id))
+  useEffect(() => {
+    if (player && game.players) {
+      setLastQuestionPoints(pointsForLast(game, player!.id));
     }
-  },[game.players, game.gamePhase])
+  }, [game.players, game.gamePhase]);
+
 
   return (
     <>
-      <UnloadPrompt />
-      {player && <PlayerBar player={player!} points={points} />}
+      {/* <UnloadPrompt /> */}
+      {player && <PlayerBar player={player} points={points} />}
       {showPage && game.hostConnection ? (
         <>
-        <div
-          className="column-shaped-container"
-          style={{
-            justifyContent: "space-between",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          {shownComponent == "answers" && game.started == "started" && (
-            <AnswerPage
-              gameState={game}
-              setGame={setGame}
-              setShownComponent={setShownComponent}
-              username={state.username}
-            />
-          )}
-          {shownComponent == "between" && game.started == "started" && (
-            <BetweenQuestions
-              gameState={game}
-              lastQuestionPoints={lastQuestionPoints}
-            />
-          )}
-          {shownComponent == "winners" &&
-            game.started == "winners" &&
-            game.winners && <Winners winners={game.winners} />}
-            </div>
+          <div
+            className="column-shaped-container"
+            style={{
+              justifyContent: "space-between",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {player && shownComponent == "answers" && game.started == "started" && (
+              <AnswerPage
+                gameState={game}
+                setGame={setGame}
+                setShownComponent={setShownComponent}
+                player={player}
+              />
+            )}
+            {player &&
+              shownComponent == "between" &&
+              game.started == "started" && (
+                <BetweenQuestions
+                  gameState={game}
+                  lastQuestionPoints={lastQuestionPoints}
+                  player={player}
+                />
+              )}
+            {shownComponent == "winners" &&
+              game.started == "winners" &&
+              game.winners && <Winners winners={game.winners} />}
+          </div>
         </>
       ) : (
         <Waiting
-          message="Waiting for host to reconnect"
-          time={reconnectionTime}
-          setTime={setReconnectionTime}
-        />
+            message="Waiting for host to reconnect"
+            time={reconnectionTime}
+            setTime={setReconnectionTime} possibleLeave={true}        />
       )}
     </>
   );

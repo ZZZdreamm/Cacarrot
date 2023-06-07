@@ -5,9 +5,6 @@ import { Ability, Game, Player } from "./game.models";
 export default function ChooseAbility({
   gameState,
   player,
-  setPoints,
-  setActiveEffects,
-  points,
   setComponentState,
 }: ChooseAbilityProps) {
   return (
@@ -17,11 +14,9 @@ export default function ChooseAbility({
           <AbilityCard
             key={index}
             ability={ability}
-            playerPoints={points}
+            playerPoints={player.points}
             gameState={gameState}
             player={player}
-            setPoints={setPoints}
-            setActiveEffects={setActiveEffects}
             setComponentState={setComponentState}
             />
         ))}
@@ -39,8 +34,5 @@ export default function ChooseAbility({
 interface ChooseAbilityProps {
   gameState: Game;
   player: Player;
-  setPoints: any;
-  setActiveEffects: any;
-  points: number;
   setComponentState: any;
 }

@@ -1,37 +1,17 @@
+import { socket } from "../App";
 import { Ability } from "./game.models";
 
 export const DoubleNext = (
-  gamecode: string,
-  playerName: string,
-  setPoints: any,
-  setActiveEffects: any,
-  enemyName?: string,
+  playerName: string
 ) => {
-  //   console.log('double next')
-  // setPoints((points: number) => {
-  //   const pointsLeft = points - 500;
-  //   return pointsLeft;
-  // });
-  // setActiveEffects((activeEffects: string[]) => {
-  //   const effects = [...activeEffects];
-  //   effects.push("DoubleNext");
-  //   return effects
-  // });
+  socket.emit('used-bonus', {playerName:playerName, bonusName:'DoubleNext'})
 };
 
 export const EraseEnemyPoints = (
-  gamecode: string,
   playerName: string,
-  setPoints: any,
-  setActiveEffects: any,
   enemyName: string,
 ) => {
-  // console.log('erase points')
-  // setPoints((points: number) => {
-  //   const pointsLeft = points - 500;
-  //   return pointsLeft;
-  // });
-  // setPointsForAnotherPlayer(gamecode, enemyName, -(700));
+  socket.emit('used-bonus', {playerName:playerName, bonusName:'EraseEnemyPoints', enemyName:enemyName})
 };
 
 export const PlayerAbilities: Ability[] = [
@@ -50,4 +30,8 @@ export const PlayerAbilities: Ability[] = [
     explanation:
       "You sacrifice your 500 points to erase 700 points from choosen player",
   },
+ 
+
+
+
 ];

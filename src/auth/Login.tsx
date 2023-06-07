@@ -29,7 +29,7 @@ export default function Login() {
   }
   return (
     <>
-      <h3 style={{ fontSize: "3em" }}>Login</h3>
+      <h1 style={{ fontSize: "3em" }}>Login</h1>
       <AuthForm
         model={{ email: "", password: "" }}
         onSubmit={async (values) => await login(values)}

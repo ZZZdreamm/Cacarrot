@@ -103,7 +103,7 @@ export default function GameHost() {
           {shownComponent == "winners" && <Winners winners={game.winners} />}
         </div>
       ) : (
-        <Waiting message="Waiting for connection" setTime={()=>{}}/>
+        <Waiting message="Waiting for connection" setTime={() => { } } possibleLeave={true}/>
       )}
     </>
   );

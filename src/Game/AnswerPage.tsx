@@ -1,51 +1,50 @@
 import { useEffect, useState } from "react";
-import {
-  getOnStartingTime,
-} from "../FirebaseDatabase/GamesInDB";
+import { getOnStartingTime } from "../FirebaseDatabase/GamesInDB";
 import Timer from "../Utilities/Timer";
 import { socket } from "../App";
-import { Answer, Game } from "./game.models";
+import { Answer, Game, Player } from "./game.models";
 
 export default function AnswerPage({
   gameState,
   setGame,
   setShownComponent,
-  username,
+  player,
 }: AnswerPageProps) {
   const [rotation, setRotation] = useState({});
 
-  useEffect(()=>{
-    getOnStartingTime(gameState.gamecode, setGame)
-  },[])
+  useEffect(() => {
+    getOnStartingTime(gameState.gamecode, setGame);
+  }, []);
 
   const sendAnswer = (answer: string) => {
     return async () => {
       const sendingTime = gameState.gameTemplate.questionTime - gameState.time;
-      const yourAnswer : Answer = {
+      const yourAnswer: Answer = {
         choosenAnswer: answer,
         sendingTime: sendingTime,
         questionNumber: gameState.currentQuestion,
-        pointsFor:0
+        pointsFor: 0,
       };
-      socket.emit("send-answer", {playerName:username, answer:yourAnswer})
+      socket.emit("send-answer", {
+        playerName: player.name,
+        answer: yourAnswer,
+        bonuses: player.activeBonuses,
+      });
       setTimeout(() => {
         setShownComponent("between");
-      }, 200);
+      }, 350);
     };
   };
 
-
   useEffect(() => {
-    if(gameState.startingTime || gameState.startingTime == 0){
-        onTimeChange(3 - gameState.startingTime);
+    if (gameState.startingTime || gameState.startingTime == 0) {
+      onTimeChange(3 - gameState.startingTime);
     }
   }, [gameState.startingTime]);
 
   function onTimeChange(rotationNumber: number) {
     setRotation({ transform: `rotate(${rotationNumber * 90}deg)` });
   }
-
-
 
   return (
     <>
@@ -54,7 +53,7 @@ export default function AnswerPage({
           <div className="rolling-square" style={rotation}></div>
           <Timer
             time={gameState.startingTime}
-            bonusStyling={{marginTop:'0', position:'absolute'}}
+            bonusStyling={{ marginTop: "0", position: "absolute" }}
           />
         </div>
       )}
@@ -75,7 +74,7 @@ export default function AnswerPage({
 
 interface AnswerPageProps {
   gameState: Game;
-  setGame:(game:Game) => void;
+  setGame: (game: Game) => void;
   setShownComponent: (shownComponent: string) => void;
-  username: string;
+  player: Player;
 }

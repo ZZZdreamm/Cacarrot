@@ -7,7 +7,8 @@ import Counter from "./Counter";
 export default function Waiting({
   message,
   time,
-  setTime
+  setTime,
+  possibleLeave
 }: WaitingProps) {
   const navigate = useNavigate()
   const [waiting, setWaiting] = useState(true);
@@ -33,7 +34,7 @@ export default function Waiting({
             bonusStyling={{ display: "none" }}
           />
 
-          <button onClick={() => {navigate('/')}}>Leave game</button>
+          {possibleLeave && <button onClick={() => {navigate('/')}}>Leave game</button>}
         </>
       ) : (
         <GameAbandoned />
@@ -46,4 +47,5 @@ interface WaitingProps {
   message: string;
   time?: number;
   setTime: (time: any) => void;
+  possibleLeave:boolean;
 }

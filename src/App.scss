@@ -1,3 +1,9 @@
+$background-colorC: #ffb03b;
+$containers-colorC: #fff0a5;
+$buttons-colorC: #ffffff;
+$buttonsHover-colorC: #379956;
+$parts-colorC: #7c73e6;
+
 @media only screen and (min-width: 2400px) {
   html {
     font-size: 32px;
@@ -45,15 +51,15 @@ h4 {
 }
 button {
   font-size: 2rem;
-  border: 5px solid #468966;
+  border: 5px solid $buttonsHover-colorC;
   border-radius: 20px;
-  background: white;
+  background: $buttons-colorC;
   cursor: inherit;
   padding: 5px;
   margin: 10px;
 }
 button:hover {
-  background: #379956;
+  background: $buttonsHover-colorC;
 }
 select {
   width: 80%;
@@ -132,13 +138,12 @@ form {
 }
 .paragraph {
   text-align: center;
-  background: #fff0a5;
+  background: $containers-colorC;
   padding: 30px;
   border-radius: 20px;
 }
 
 .my-button {
-  background: white;
   border: none;
   border-radius: 20px;
   border: 5px solid #468966;
@@ -198,7 +203,7 @@ form {
   width: 15%;
   cursor: inherit;
   &:hover {
-    background-color: #379956;
+    background-color: $buttonsHover-colorC;
   }
 }
 .question-input {
@@ -220,7 +225,7 @@ form {
 .bar {
   height: 94%;
   width: 12rem;
-  background: #fff0a5;
+  background: $containers-colorC;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -307,7 +312,7 @@ form {
   align-items: center;
 }
 .player {
-  background: #7c73e6;
+  background: $parts-colorC;
   height: 4rem;
   width: 4rem;
   border-radius: 50%;
@@ -322,7 +327,7 @@ form {
   height: 8rem;
   width: 8rem;
   border-radius: 50%;
-  background: #7c73e6;
+  background: $parts-colorC;
   color: white;
   text-align: center;
   display: flex;
@@ -341,7 +346,7 @@ form {
 .player-stats {
   width: 80%;
   height: 10%;
-  background: #ffe9e3;
+  background: $containers-colorC;
   border-radius: 30px;
   margin: 3px 0;
   display: flex;
@@ -364,7 +369,7 @@ form {
   border: none;
 }
 .go-back-button:hover {
-  color: #379956;
+  color: $buttonsHover-colorC;
   background-color: white;
 }
 .error {
@@ -381,7 +386,7 @@ form {
   cursor: inherit;
 }
 .answer-result-container {
-  background: #7c73e6;
+  background: $parts-colorC;
   padding: 20px;
   text-align: center;
 }
@@ -390,7 +395,7 @@ form {
 }
 .circle {
   border-radius: 50%;
-  background-color: #7c73e6;
+  background-color: $parts-colorC;
   height: fit-content;
   width: fit-content;
   height: 13rem;
@@ -412,50 +417,76 @@ form {
 }
 .abilities-placeholder {
   width: 90%;
-  height: 80%;
+  margin-top: 0.5rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.ability-card {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 5rem 16rem 18rem;
-  grid-template-areas: "name" "image" "text";
-  margin: 2rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  .ability-card {
+    scroll-snap-align: center;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 5rem 16rem 8rem 4rem 8rem;
+    grid-template-areas: "name" "image" "text" "options" "submit";
+    margin: 2rem;
 
-  font-family: roboto;
-  border-radius: 18px;
-  background: white;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
-  text-align: center;
-}
-.ability-card-name {
-  grid-area: name;
-  background: #ffe9e3;
-  color: #2f2f2f;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.3rem;
-  padding: 10px;
-}
-.ability-card-image {
-  grid-area: image;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  background-size: cover;
-}
-.ability-card-text {
-  grid-area: text;
-  margin: 1.5rem;
-  font-weight: bold;
+    font-family: roboto;
+    border-radius: 18px;
+    background: white;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
+    text-align: center;
+
+    &-name {
+      grid-area: name;
+      background: $containers-colorC;
+      color: #2f2f2f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.3rem;
+      padding: 10px;
+    }
+    &-image {
+      grid-area: image;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      background-size: cover;
+    }
+    &-text {
+      font-size: 1.5rem;
+      grid-area: text;
+      margin: 0.5rem;
+      font-weight: bold;
+      display: flex;
+    }
+    &-options {
+      grid-area: options;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      & select {
+        overflow-y: auto;
+      }
+    }
+    &-submit {
+      grid-area: submit;
+    }
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+      z-index: 30;
+    }
+  }
 }
 
-.ability-card:hover {
-  transform: scale(1.2);
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
-  z-index: 30;
+@media only screen and (max-width: 600px) {
+  .abilities-placeholder {
+    border: 0.5rem solid $parts-colorC;
+    .ability-card {
+      width: 90%;
+      flex: 0 0 auto;
+    }
+  }
 }
 
 .loader {
@@ -504,7 +535,11 @@ h1 {
   position: fixed;
   left: 0;
   top: 0;
-  background-image: radial-gradient(50% 176%, #ffb03b 100%, #ffb03b 100%);
+  background-image: radial-gradient(
+    50% 176%,
+    $background-colorC 100%,
+    $background-colorC 100%
+  );
   min-height: 30rem;
   overflow: hidden;
   display: flex;
