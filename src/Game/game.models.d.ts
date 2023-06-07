@@ -11,6 +11,7 @@ export interface Game{
     startingTime:number;
     winners:Player[];
     hostConnection:boolean;
+    hostId:string;
 }
 
 export interface GameTemplate{
@@ -24,7 +25,7 @@ export interface Player{
     id:number;
     name:string;
     points:number;
-    lastAnswer:Answer;
+    answers:Answer[];
     shownComponent:string;
     activeBonuses?:string[];
 }
@@ -32,6 +33,7 @@ export interface Answer{
     choosenAnswer:string;
     sendingTime:number;
     questionNumber:number;
+    pointsFor:number;
 }
 
 export interface Ability{

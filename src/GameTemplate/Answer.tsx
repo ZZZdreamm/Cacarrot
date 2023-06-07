@@ -6,7 +6,7 @@ export default function Answer({answerSign, answerRef, characterLimit, handleInp
             className="my-input editable-div"
             contentEditable={true}
             onInput={() => {
-              handleInput(answerRef, characterLimit);
+              handleInput(answerRef.current, characterLimit);
               //@ts-ignore
               onQuestionChange(`answer${answerSign}`, answerRef.current!.innerText);
             }}

@@ -1,5 +1,5 @@
 import { onDisconnect, onValue, ref, set } from "firebase/database";
-import { connectedRef } from "../FirebaseDatabase/GamesInDB";
+import { connectedRef } from "../FirebaseDatabase/FirebaseConfig";
 
 export const IfConnected = (setConnected: any) => {
     onValue(connectedRef, (snap) => {

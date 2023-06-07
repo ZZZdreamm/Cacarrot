@@ -3,7 +3,6 @@ import { Game, Player } from "./game.models";
 import PlayerContainer from "./PlayerContainer";
 import { useEffect, useState } from "react";
 import {
-  createGameInDB,
   getGameData,
   setDataInDB,
 } from "../FirebaseDatabase/GamesInDB";
@@ -29,7 +28,8 @@ export default function Gamecode() {
     gamePhase:1,
     startingTime:3,
     winners:[],
-    hostConnection:true
+    hostConnection:true,
+    hostId:socket.id
   });
 
   const [startDisabled, setStartDisabled] = useState(true);
@@ -37,7 +37,7 @@ export default function Gamecode() {
   useEffect(() => {
     fetchGame(state, setGame)
     getGameData(game!.gamecode, setGame);
-    socket.emit('gamecode', game.gamecode)
+    socket.emit('host', {code:game.gamecode, hostId:socket.id})
   }, []);
 
 
@@ -73,7 +73,7 @@ export default function Gamecode() {
           <button
             disabled={startDisabled}
             className="start-game-btn"
-            onClick={() => startGame(game, setGame)}
+            onClick={startGame}
           >
             Start game
           </button>

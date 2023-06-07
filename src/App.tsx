@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import "./App.scss"
 import { Route, Routes } from "react-router-dom";
 import routes, { guardedRoutes } from "./routes";
 import { claim } from "./auth/auth.models";
@@ -10,10 +10,10 @@ import Menu from "./MainComponents/Menu";
 import { IsOnline } from "./Utilities/IsOnline";
 import OfflineWebsite from "./Utilities/OfflineWebsite";
 import ChooseAbility from "./Game/ChooseAbility";
-import { firestore } from "./FirebaseDatabase/FirebaseConfig";
 import GuardedRoute from "./Utilities/GuardedRoute";
 import { io } from "socket.io-client";
 import { serverURL } from "./apiPaths";
+import SnowingEffect from "./Utilities/SnowingEffect";
 
 export const socket = io(serverURL)
 
@@ -21,6 +21,7 @@ function App() {
   const [claims, setClaims] = useState<claim[]>([]);
 
   const [online, setOnline] = useState(true);
+  const [gotClaims, setGotClaims] = useState(false)
 
   useEffect(() => {
     setClaims(getClaims());
@@ -30,6 +31,7 @@ function App() {
 
   useEffect(() => {
     setClaims(getClaims());
+    setGotClaims(true)
   }, [localStorage]);
 
   return (
@@ -40,7 +42,10 @@ function App() {
             {online ? (
               <>
                 <Menu />
+                <SnowingEffect/>
+
                 <section className="landing-page">
+
                   <Routes>
                     {routes.map((route) => (
                       <Route
@@ -50,7 +55,7 @@ function App() {
                       />
                     ))}
 
-                    {guardedRoutes.map((route) => (
+                    {gotClaims && guardedRoutes.map((route) => (
                       <Route
                         key={route.path}
                         element={

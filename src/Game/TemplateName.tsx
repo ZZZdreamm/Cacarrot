@@ -1,7 +1,7 @@
 import { GameTemplate } from "./game.models"
 
 export default function TemplateName({template, templateIndex, chooseTemplate, choosenTemplate}:TemplateNameProps){
-    const templateColored = choosenTemplate && template.id === choosenTemplate.id ? '#c4c1e0' : 'inherit'
+    const templateColored = choosenTemplate && template.id === choosenTemplate.id ? '#468966' : 'inherit'
     return(
         <p
         style={{backgroundColor:templateColored}}

@@ -4,7 +4,7 @@ import PlayerStats from "./PlayerStats";
 import { Player } from "./game.models";
 import { setDataInDB } from "../FirebaseDatabase/GamesInDB";
 
-export default function Statistics({ time, setTime, players, setPlayers, gamecode }:StatisticsProps) {
+export default function Statistics({ time, players, setPlayers, gamecode }:StatisticsProps) {
   useEffect(()=>{
     setPlayers(players.sort((player1, player2) => player2.points - player1.points))
   },[])
@@ -15,7 +15,7 @@ export default function Statistics({ time, setTime, players, setPlayers, gamecod
   },[time])
   return (
     <>
-      <Timer time={time} setTime={setTime} bonusStyling={{top:'1%'}} />
+      <Timer time={time} bonusStyling={{top:'1%'}} />
 
       <div className="player-stats-list column-shaped-container">
       <p style={{display:'flex', justifyContent:'space-between', width:'80%'}}>
@@ -32,7 +32,6 @@ export default function Statistics({ time, setTime, players, setPlayers, gamecod
 
 interface StatisticsProps{
   time:number;
-  setTime:(time:number)=>void;
   players:Player[];
   setPlayers:(players:Player[])=>void;
   gamecode:string;

@@ -13,7 +13,7 @@ export default function AuthForm(props: authFormProps, ifRegister: boolean) {
         setSubmission(false)
       },3000)
   }
-  const {values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting} = useFormik({
+  const {values, errors, touched, handleBlur, handleChange, handleSubmit} = useFormik({
     initialValues: {
       email: "",
       password: "",

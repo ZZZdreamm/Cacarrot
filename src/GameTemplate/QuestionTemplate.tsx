@@ -63,16 +63,16 @@ export default function QuestionTemplate({
       return prevQuestions;
     });
   }
-  const handleInput = (divRef: any, characterLimit: number) => {
-    const content = divRef.current.innerText;
-    if (content.length > characterLimit) {
-      console.log(divRef.current.innerText);
-      divRef.current.innerText = content.slice(0, characterLimit);
+  const handleInput = (divRef: HTMLElement, characterLimit: number) => {
+    if (divRef.innerHTML) {
+      const content = divRef.innerHTML;
+      if (content.length > characterLimit) {
+        divRef.innerHTML = content.slice(0, characterLimit);
+      }
     }
   };
 
   function handleCheckboxChange(checkboxNumber: number) {
-    console.log(checkboxNumber);
     if (checkboxes[checkboxNumber].checked) {
       const updatedCheckboxes = checkboxes.map((checkbox) => {
         if (checkbox.id === checkboxNumber) {
@@ -80,7 +80,6 @@ export default function QuestionTemplate({
         }
         return { ...checkbox };
       });
-      console.log(updatedCheckboxes);
       setCheckboxes(updatedCheckboxes);
     } else {
       const updatedCheckboxes = checkboxes.map((checkbox) => {
@@ -89,7 +88,6 @@ export default function QuestionTemplate({
         }
         return { ...checkbox, checked: false };
       });
-      console.log(updatedCheckboxes);
       setCheckboxes(updatedCheckboxes);
     }
   }
@@ -120,6 +118,38 @@ export default function QuestionTemplate({
       checkboxNumber: 3,
     },
   ];
+
+  // Get the text element
+  // const text = document.getElementById("question-text") as HTMLElement;
+  // const container = document.getElementById("question-div") as HTMLElement;
+
+  // Function to resize the font size based on container size
+  // function shrinkTextToFit(container: HTMLElement) {
+  //   const containerWidth = container.offsetWidth;
+
+  //   let fontSize = parseInt(window.getComputedStyle(container).getPropertyValue('font-size'))
+  //   let textSize = fontSize * container.innerHTML.length;
+  //   console.log(fontSize)
+  //   console.log(container.innerHTML.length)
+  //   console.log(textSize);
+  //   if(textSize > containerWidth){
+  //     while (textSize > containerWidth) {
+  //       fontSize--;
+  //       container.style.fontSize = `${fontSize}px`;
+  //       textSize = fontSize * container.innerHTML.length;
+  //     }
+  //   }else{
+  //     while (textSize < containerWidth) {
+  //       fontSize++;
+  //       container.style.fontSize = `${fontSize}px`;
+  //       textSize = fontSize * container.innerHTML.length;
+  //     }
+  //   }
+
+  // }
+
+  // Call the resizeText function when the window is resized
+
   return (
     <section className="question-template">
       <div
@@ -128,9 +158,10 @@ export default function QuestionTemplate({
         placeholder="Write your question here"
         contentEditable={true}
         onInput={() => {
-          handleInput(questionRef, questionCharacterLimit);
+          handleInput(questionRef.current!, questionCharacterLimit);
           //@ts-ignore
           onQuestionChange("question", questionRef.current!.innerText);
+          // shrinkTextToFit(questionRef.current!);
         }}
       >
         {question.question}

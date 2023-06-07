@@ -5,7 +5,7 @@ const StyledModal = Modal.styled`
   height: 30rem;
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #fff0a5;
   flex-direction: column;
 `;
 

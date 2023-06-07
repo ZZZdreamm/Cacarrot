@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
 import { ReadyImagesURL } from "../appUrls";
-import {
-  fetchData,
-  getCurrentQuestionFromDB,
-  getGameStart,
-  setPointsForPlayer,
-} from "../FirebaseDatabase/GamesInDB";
 import { Answer, Player } from "./game.models";
 import ChooseAbility from "./ChooseAbility";
 import Waiting from "../Utilities/Waiting";
@@ -13,38 +7,11 @@ import Waiting from "../Utilities/Waiting";
 //@ts-ignore
 export default function BetweenQuestions({
   gameState,
-  setShownComponent,
-  questionDone,
-  setQuestionsDone,
-  setTime,
   lastQuestionPoints,
-  setLastQuestionPoints,
-  player,
-  points,
-  setPoints,
-  setActiveEffects,
 }: BetweenQuestionsProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [componentState, setComponentState] = useState("showingAnswer");
 
-  useEffect(() => {
-    fetchData(
-      gameState.gamecode,
-      questionDone,
-      setQuestionsDone,
-      "questionDone"
-    );
-    getCurrentQuestionFromDB(gameState.gamecode, setCurrentQuestion);
-  }, []);
 
-  useEffect(() => {
-    if (currentQuestion > questionDone) {
-      console.log("alo");
-      setTime(gameState.gameTemplate.questionTime);
-      setLastQuestionPoints(0);
-      setShownComponent("answers");
-    }
-  }, [currentQuestion]);
 
   useEffect(() => {
     // if (
@@ -64,7 +31,7 @@ export default function BetweenQuestions({
     <>
       {componentState == "showingAnswer" && (
         <>
-          <div className="answer-result-container">
+          <div className="answer-result-container" style={{position:'relative', top:'20%'}}>
             <img
               className="circle-image"
               src={`${ReadyImagesURL}/${answerEffectImage}`}
@@ -87,7 +54,7 @@ export default function BetweenQuestions({
         />
       )} */}
       {componentState == "waitingForOthers" && (
-        <Waiting message="Wait for other players" />
+        <Waiting message="Wait for other players" setTime={()=>{}} />
       )}
     </>
   );
@@ -95,14 +62,5 @@ export default function BetweenQuestions({
 
 interface BetweenQuestionsProps {
   gameState: any;
-  setShownComponent: (shownComponent: string) => void;
-  questionDone: number;
-  setQuestionsDone: (questionDone: number) => void;
-  setTime: (time: number) => void;
   lastQuestionPoints: number;
-  setLastQuestionPoints: (points: number) => void;
-  player: Player;
-  points: number;
-  setPoints: (points: number) => void;
-  setActiveEffects: (effects: string[]) => void;
 }

@@ -12,6 +12,7 @@ const defaultGame : Game = {
   startingTime: 3,
   winners: [],
   hostConnection: true,
+  hostId:''
 };
 const GameStateContext = React.createContext<{
   gameState: Game;

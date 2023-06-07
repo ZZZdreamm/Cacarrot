@@ -3,6 +3,8 @@ import Authorized from "../auth/Authorized";
 import MyInput from "../Utilities/MyInput";
 import { useEffect, useState } from "react";
 import { checkIfGamecodeIsInDB } from "../FirebaseDatabase/GamesInDB";
+import { ReadyImagesURL } from "../appUrls";
+import SnowingEffect from "../Utilities/SnowingEffect";
 
 export default function LandingPage() {
   const navigate = useNavigate();

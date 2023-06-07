@@ -8,7 +8,7 @@ export default function SlideTemplate({slideNumber, questions, setQuestions,choo
     useEffect(()=>{
         questions[slideNumber-1].questionNumber = slideNumber
     },[slideNumber])
-    const colorSlide = slideNumber === choosenQuestion ? {background: '#7c73e6'} : {}
+    const colorSlide = slideNumber === choosenQuestion ? {background: '#b64926'} : {}
     return(
         <div className="slide" style={colorSlide}>
             <div style={{position:'relative', left:'25%'}}>{slideNumber}</div>

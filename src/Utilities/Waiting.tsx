@@ -1,35 +1,39 @@
 import { useEffect, useState } from "react";
 import GameAbandoned from "../Game/GameAbandoned";
-import StartingTimer from "../Game/StartingTimer";
-import { ReadyImagesURL } from "../appUrls";
+import { useNavigate } from "react-router-dom";
+import Counter from "./Counter";
 
 //@ts-ignore
 export default function Waiting({
   message,
   time,
-  setTime,
-}: StartingTimerProps) {
-  const [waiting, setWaiting] = useState(true)
-  useEffect(()=>{
-    localStorage.setItem('time', `${time!}`)
-    if(time! < 1 && waiting){
-        setWaiting(false)
+  setTime
+}: WaitingProps) {
+  const navigate = useNavigate()
+  const [waiting, setWaiting] = useState(true);
+  useEffect(() => {
+    localStorage.setItem("time", `${time!}`);
+    if (time! < 1 && waiting) {
+      setWaiting(false);
     }
-  },[time])
+  }, [time]);
   return (
     <>
       {waiting ? (
         <>
-          <img
-            src={`${ReadyImagesURL}/loading.gif`}
-            style={{ height: "30rem", width: "30rem" }}
-          />
+          <div className="loader">
+            <span className="loader__element"></span>
+            <span className="loader__element"></span>
+            <span className="loader__element"></span>
+          </div>
           <h1>{message}</h1>
-          <StartingTimer
+          <Counter
             time={time!}
-            setTime={setTime!}
+            setTime={setTime}
             bonusStyling={{ display: "none" }}
           />
+
+          <button onClick={() => {navigate('/')}}>Leave game</button>
         </>
       ) : (
         <GameAbandoned />
@@ -38,8 +42,8 @@ export default function Waiting({
   );
 }
 
-interface StartingTimerProps {
-  message:string;
+interface WaitingProps {
+  message: string;
   time?: number;
-  setTime?: (time: number) => void;
+  setTime: (time: any) => void;
 }

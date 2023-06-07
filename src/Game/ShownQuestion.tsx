@@ -2,58 +2,47 @@ import { useEffect, useRef, useState } from "react";
 import Timer from "../Utilities/Timer";
 import { ReadyImagesURL } from "../appUrls";
 import { start } from "repl";
-import StartingTimer from "./StartingTimer";
 import { fetchData, setDataInDB } from "../FirebaseDatabase/GamesInDB";
 import { Question } from "../GameTemplate/questions.models";
+import { Game } from "./game.models";
 
 //@ts-ignore
 export default function ShownQuestion({
   currentQuestion,
   time,
-  setTime,
   gamecode,
+  game,
+  setGame
 }: ShownQuestionProps) {
-  const [startingTime, setStartingTime] = useState<number>();
   const [showQuestion, setShowQuestion] = useState(false);
-  const [rotation, setRotation] = useState({});
   useEffect(() => {
-    fetchData(gamecode, 3, setStartingTime, "startingTime")
+    fetchData(gamecode, 3, setGame, "startingTime");
   }, []);
 
+
   useEffect(() => {
-    if (startingTime) {
-      onTimeChange(3 - startingTime);
-      setDataInDB(gamecode, startingTime, "startingTime");
-      if (startingTime < 1) {
-        setTimeout(() => {
-          setShowQuestion(true);
-        }, 1000);
-      }
-    }
-    if (startingTime == 0){
-      setDataInDB(gamecode, startingTime, "startingTime");
+    if (game.startingTime == 0) {
       setShowQuestion(true);
     }
-  }, [startingTime]);
-  function onTimeChange(rotationNumber: number) {
-    setRotation({ transform: `rotate(${rotationNumber * 90}deg)` });
-  }
+  }, [game.startingTime]);
   return (
     <>
       {!showQuestion && (
         <>
-        <div style={{ position: "absolute", top: "45%" }}>
-          {/* <div className="rolling-square" style={rotation}></div> */}
-          <div className="my-input shown-question">
-            {currentQuestion.question}
+          <div style={{ position: "absolute", top: "45%" }}>
+            <div className="my-input shown-question">
+              {currentQuestion.question}
+            </div>
+            <Timer
+              time={game.startingTime}
+              bonusStyling={{ display: "none" }}
+            />
           </div>
-          <StartingTimer time={startingTime!} setTime={setStartingTime} bonusStyling={{display: 'none'}} />
-        </div>
         </>
       )}
       {showQuestion && (
         <>
-          <Timer time={time} setTime={setTime} bonusStyling={{ left: "90%" }} />
+          <Timer time={time} bonusStyling={{ left: "90%" }} />
 
           <div className="my-input shown-question">
             {currentQuestion.question}
@@ -89,6 +78,7 @@ export default function ShownQuestion({
 interface ShownQuestionProps {
   currentQuestion: Question;
   time: number;
-  setTime: (time: number) => void;
   gamecode: string;
+  game:Game;
+  setGame:(game:Game) => void
 }

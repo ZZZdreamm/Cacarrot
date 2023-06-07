@@ -1,29 +1,18 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { urlAccounts } from "../apiPaths";
-// import { getProfile, saveProfile } from "../Profile/HandleProfile";
-// import { profileDTO } from "../Profile/profiles.models";
-import DisplayErrors from "../Utilities/DisplayErrors";
-import { authenticationResponse, userCredentials } from "./auth.models";
+import { userCredentials } from "./auth.models";
 import AuthenticationContext from "./AuthenticationContext";
 import AuthForm from "./AuthForm";
 import { getClaims, saveToken } from "./HandleJWT";
-import { profileDTO } from "../Profile/profiles.models";
-import { getProfile, saveProfile } from "../Profile/HandleProfile";
-import ProfileContext from "../Profile/ProfileContext";
-import { loginInDB } from "../FirebaseDatabase/LoginInDB";
+import { saveProfile } from "../Profile/HandleProfile";
 import { sendCredentials } from "./AuthFunctions";
-// import ProfileContext from "../Profile/ProfileContext";
 
 export default function Login() {
   const [errors, setErrors] = useState<string[]>([]);
-  const { claims, update } = useContext(AuthenticationContext);
-  const { updateProfile } = useContext(ProfileContext);
+  const { update } = useContext(AuthenticationContext);
   const navigate = useNavigate();
 
   async function login(credentials: userCredentials) {
-    console.log(credentials);
     try {
       setErrors([]);
       const response = await sendCredentials(credentials, "login")
@@ -41,7 +30,6 @@ export default function Login() {
   return (
     <>
       <h3 style={{ fontSize: "3em" }}>Login</h3>
-      {/* <DisplayErrors errors={errors} /> */}
       <AuthForm
         model={{ email: "", password: "" }}
         onSubmit={async (values) => await login(values)}

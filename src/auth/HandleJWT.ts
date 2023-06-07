@@ -1,7 +1,4 @@
-import { useContext } from "react";
-import { date } from "yup";
-import { authenticationResponse, claim } from "./auth.models";
-import AuthenticationContext from "./AuthenticationContext";
+import { claim } from "./auth.models";
 
 
 const tokenKey = 'token';
@@ -22,7 +19,7 @@ export function getClaims(): claim[]{
     for(const property in dataToken){
         response.push({name:property,value:dataToken[property]});
     }
-    
+
     return response;
 
 }

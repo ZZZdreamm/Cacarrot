@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { gamesRef } from "../FirebaseDatabase/FirebaseConfig";
+import { useEffect } from "react";
 
 const UnloadPrompt = () => {
   useEffect(() => {

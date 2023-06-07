@@ -1,7 +1,3 @@
-import {
-  setPointsForAnotherPlayer,
-  setPointsForPlayer,
-} from "../FirebaseDatabase/GamesInDB";
 import { Ability } from "./game.models";
 
 export const DoubleNext = (
@@ -11,17 +7,16 @@ export const DoubleNext = (
   setActiveEffects: any,
   enemyName?: string,
 ) => {
-    console.log('double next')
-  setPoints((points: number) => {
-    const pointsLeft = points - 500;
-    setPointsForPlayer(gamecode, playerName, pointsLeft);
-    return pointsLeft;
-  });
-  setActiveEffects((activeEffects: string[]) => {
-    const effects = [...activeEffects];
-    effects.push("DoubleNext");
-    return effects
-  });
+  //   console.log('double next')
+  // setPoints((points: number) => {
+  //   const pointsLeft = points - 500;
+  //   return pointsLeft;
+  // });
+  // setActiveEffects((activeEffects: string[]) => {
+  //   const effects = [...activeEffects];
+  //   effects.push("DoubleNext");
+  //   return effects
+  // });
 };
 
 export const EraseEnemyPoints = (
@@ -31,13 +26,12 @@ export const EraseEnemyPoints = (
   setActiveEffects: any,
   enemyName: string,
 ) => {
-  console.log('erase points')
-  setPoints((points: number) => {
-    setPointsForPlayer(gamecode, playerName, points - 500);
-    const pointsLeft = points - 500;
-    return pointsLeft;
-  });
-  setPointsForAnotherPlayer(gamecode, enemyName, -(700));
+  // console.log('erase points')
+  // setPoints((points: number) => {
+  //   const pointsLeft = points - 500;
+  //   return pointsLeft;
+  // });
+  // setPointsForAnotherPlayer(gamecode, enemyName, -(700));
 };
 
 export const PlayerAbilities: Ability[] = [

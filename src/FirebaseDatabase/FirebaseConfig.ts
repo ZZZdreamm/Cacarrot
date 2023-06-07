@@ -2,6 +2,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import "firebase/compat/firestore"
 import "firebase/compat/auth"
+import { ref } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDusTR62nXSXyjblgvFNIFGepxtzYxHVF8",
@@ -14,11 +15,11 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-//@ts-ignore
 export const db = firebase.database()
 export const dbRef = firebase.database().ref()
 export const usersRef = dbRef.child('users')
 export const gamesRef = dbRef.child('games')
+export const connectedRef = ref(db, ".info/connected");
 
 
 export const firestore = firebase.firestore()

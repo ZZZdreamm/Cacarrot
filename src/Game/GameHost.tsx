@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useFetcher, useLocation } from "react-router-dom";
 import { Game, Player } from "./game.models";
 import { Question } from "../GameTemplate/questions.models";
 import ShownQuestion from "./ShownQuestion";
@@ -7,16 +7,13 @@ import Statistics from "./Statistics";
 import Winners from "./Winners";
 import {
   getGameData,
-  setCurrentQuestionInDB,
   fetchData,
-  setDataInDB,
-  getOnIfHostConnected,
 } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import { getSortedPlayers, getWinners } from "./FunctionsGame";
 import { HostConnection } from "../FirebaseDatabase/ConnectedToDB";
 import Waiting from "../Utilities/Waiting";
-
+import { socket } from "../App";
 
 export default function GameHost() {
   const location = useLocation();
@@ -25,114 +22,59 @@ export default function GameHost() {
   const [game, setGame] = useState(gameData);
   const gamecode = gameData.gamecode;
   const [shownComponent, setShownComponent] = useState("question");
-
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>();
   const [currentQuestion, setCurrentQuestion] = useState<Question>(
     game.gameTemplate.allQuestions[0]
   );
   const [players, setPlayers] = useState(game.players);
-  const [winners, setWinners] = useState<Player[]>([]);
-  const [time, setTime] = useState<number>();
-  const [gamePhase, setGamePhase] = useState<number>();
   const [showPage, setShowPage] = useState(false);
 
-  const [connected, setConnected] = useState(true)
-
-  useEffect(()=>{
-    HostConnection(gamecode)
-    getGameData(gamecode, setGame, false);
-  },[])
 
   useEffect(() => {
-    if (
-      (time || time == 0) &&
-      (currentQuestionIndex || currentQuestionIndex == 0) &&
-      shownComponent
-    ) {
-      setShowPage(true);
-    }
-  }, [currentQuestionIndex, gamePhase, time]);
+    socket.emit("host-reconnect", { code: gamecode, hostId: socket.id });
+    HostConnection(gamecode)
+    getGameData(gamecode, setGame);
+  }, []);
 
   useEffect(() => {
     if (gamecode) {
-      fetchData(gamecode, connected, setConnected, 'hostConnection')
-      fetchData(gamecode, time, setTime, "time");
-      fetchData(gamecode, winners, setWinners, 'winners')
-      fetchData(gamecode, gamePhase, setGamePhase, "gamePhase");
-      fetchData(gamecode, 0, setCurrentQuestionIndex, "currentQuestionIndex");
-      getGameData(gamecode, setGame, true);
+      const getData = async () => {
+        await fetchData(gamecode, game.time, setGame, "time");
+        await fetchData(gamecode, game.hostConnection, setGame, "hostConnection");
+        await fetchData(gamecode, game.winners, setGame, "winners");
+        await fetchData(gamecode, game.gamePhase, setGame, "gamePhase");
+        await fetchData(gamecode, game.currentQuestion, setGame, "currentQuestion");
+        setShowPage(true)
+      };
+      getData();
     }
   }, [gamecode]);
 
   useEffect(() => {
-    if (gamePhase) {
-      if (gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
-
-      } else if (gamePhase % 2 == 0) {
+    if (game.gamePhase) {
+      if (game.gamePhase == game.gameTemplate.allQuestions.length * 2 + 1) {
+        setShownComponent("winners");
+      } else if (game.gamePhase % 2 == 0) {
         setShownComponent("statistics");
-      } else if (gamePhase % 2 == 1) {
-        if (
-          (time || time == 0) &&
-          time < 1 &&
-          (currentQuestionIndex || currentQuestionIndex == 0)
-        ) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }
+      } else if (game.gamePhase % 2 == 1) {
         setShownComponent("question");
       }
-      if ((time || time == 0) && time < 1) {
-        setTime(game.gameTemplate.questionTime);
-      }
     }
-  }, [gamePhase]);
+  }, [game.gamePhase]);
 
   useEffect(() => {
-    if (time || time == 0) {
-      setTimeout(() => {
-        setDataInDB(game.gamecode, time, "time");
-        if (time < 1 && gamePhase) {
-          setGame({
-            ...game,
-            gamePhase: game.gamePhase + 1,
-          });
-          setGamePhase(gamePhase + 1);
-          setDataInDB(game.gamecode, game.gamePhase + 1, "gamePhase");
-          if(gamePhase+1 == game.gameTemplate.allQuestions.length * 2 + 1){
-            setDataInDB(game.gamecode, "winners", "gameStarted");
-            getWinners(players, setWinners);
-          }
-        }
-      }, 200);
+    if (game.currentQuestion) {
+      setCurrentQuestion(game.gameTemplate.allQuestions[game.currentQuestion]);
     }
-  }, [time]);
-  useEffect(() => {
-    if (currentQuestionIndex) {
-      setCurrentQuestion(game.gameTemplate.allQuestions[currentQuestionIndex]);
-      setCurrentQuestionInDB(game.gamecode, currentQuestionIndex);
-    }
-  }, [currentQuestionIndex]);
+  }, [game.currentQuestion]);
 
   useEffect(() => {
-    if (winners.length > 0) {
-      setDataInDB(game.gamecode, winners, 'winners')
-      setShownComponent("winners");
-    }
-  }, [winners]);
-
-  useEffect(() => {
-    if (currentQuestionIndex) {
-      setCurrentQuestionInDB(game.gamecode, currentQuestionIndex);
-    }
-  }, [shownComponent]);
-
-  useEffect(() => {
-    getSortedPlayers(game.players, setPlayers)
+    getSortedPlayers(game.players, setPlayers);
   }, [game.players]);
 
   return (
     <>
-      <UnloadPrompt/>
-      {showPage && connected ? (
+      <UnloadPrompt />
+      {showPage && game.hostConnection ? (
         <div
           className="column-shaped-container"
           style={{
@@ -144,23 +86,25 @@ export default function GameHost() {
           {shownComponent == "question" && (
             <ShownQuestion
               currentQuestion={currentQuestion}
-              time={time!}
-              setTime={setTime}
+              time={game.time!}
               gamecode={game.gamecode}
+              game={game}
+              setGame={setGame}
             />
           )}
           {shownComponent == "statistics" && (
             <Statistics
-              time={time!}
-              setTime={setTime}
+              time={game.time!}
               players={players}
               setPlayers={setPlayers}
               gamecode={game.gamecode}
             />
           )}
-          {shownComponent == "winners" && <Winners winners={winners} />}
+          {shownComponent == "winners" && <Winners winners={game.winners} />}
         </div>
-      ) : <Waiting message="Waiting for connection"/>}
+      ) : (
+        <Waiting message="Waiting for connection" setTime={()=>{}}/>
+      )}
     </>
   );
 }
