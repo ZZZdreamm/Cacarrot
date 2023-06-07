@@ -63,7 +63,7 @@ export default function Gamecode() {
           <h2>Your game code</h2>
           <span className="column-shaped-container">
             <h2>{state.gamecode}</h2>
-            <h3>Number of players in game: {game.players.length}/10</h3>
+            {game.players && <h3>Number of players in game: {game.players.length}/10</h3>}
           </span>
           <div className="player-list">
             {game.players && game.players.length != 0 && game.players.map((player: Player) => (
