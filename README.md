@@ -18,8 +18,10 @@ You can't create game on phone because it is too small for showing answers in ga
 
 If you are not logged most of routes are blocked for you and you will be redirected to login.
 
-TODO:
-- between questions add possibility for players to buy special bonuses that will affect them or other players for their points
+Game uses socket.io for communication with Heroku Node.js backend server.
+
+Newest update:
+ - added between questions possibility for players to buy special bonuses that will affect them or other players for their points
 
 
 Link to website: https://zzzdreamm.github.io/Cacarrot/
