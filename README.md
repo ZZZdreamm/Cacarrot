@@ -20,8 +20,8 @@ If you are not logged most of routes are blocked for you and you will be redirec
 
 Game uses socket.io for communication with Heroku Node.js backend server.
 
-TODO:
-- between questions add possibility for players to buy special bonuses that will affect them or other players for their points
+Newest update:
+ - added between questions possibility for players to buy special bonuses that will affect them or other players for their points
 
 
 Link to website: https://zzzdreamm.github.io/Cacarrot/
