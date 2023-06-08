@@ -9,13 +9,11 @@ import { ModalProvider } from "styled-react-modal";
 import Menu from "./MainComponents/Menu";
 import { IsOnline } from "./Utilities/IsOnline";
 import OfflineWebsite from "./Utilities/OfflineWebsite";
-import ChooseAbility from "./Game/ChooseAbility";
 import GuardedRoute from "./Utilities/GuardedRoute";
 import { io } from "socket.io-client";
 import { serverURL } from "./apiPaths";
 import SnowingEffect from "./Utilities/SnowingEffect";
-import { Game } from "./Game/game.models";
-import Waiting from "./Utilities/Waiting";
+
 
 export const socket = io(serverURL);
 

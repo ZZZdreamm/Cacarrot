@@ -27,12 +27,16 @@ export default function GameHost() {
   );
   const [players, setPlayers] = useState(game.players);
   const [showPage, setShowPage] = useState(false);
+  const [showEmpty, setShowEmpty] = useState(true)
 
 
   useEffect(() => {
     socket.emit("host-reconnect", { code: gamecode, hostId: socket.id });
     HostConnection(gamecode)
     getGameData(gamecode, setGame);
+    setTimeout(() => {
+      setShowEmpty(false)
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -105,7 +109,10 @@ export default function GameHost() {
           {shownComponent == "winners" && <Winners winners={game.winners} />}
         </div>
       ) : (
-        <Waiting message="Waiting for connection" setTime={() => { } } possibleLeave={false}/>
+        <>
+        {showEmpty ? <></> : <Waiting message="Waiting for connection" setTime={() => { } } possibleLeave={false}/>}
+
+        </>
       )}
     </>
   );
