@@ -34,7 +34,7 @@ body {
   color: #2f2f2f;
   width: 100vw;
   height: 100vh;
-  cursor: url("http://localhost:3000/Cacarrot/small_carrr.png"), auto;
+  cursor: url("https://zzzdreamm.github.io/Cacarrot/small_carrr.png"), auto;
 }
 h1 {
   font-size: 6rem;
@@ -578,4 +578,8 @@ h1 {
   100% {
     transform: translateY(0);
   }
+}
+
+.event-message{
+  color: $buttonsHover-colorC;
 }

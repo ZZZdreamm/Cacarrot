@@ -56,7 +56,9 @@ export default function GameHost() {
       } else if (game.gamePhase % 2 == 0) {
         setShownComponent("statistics");
       } else if (game.gamePhase % 2 == 1) {
-        setShownComponent("question");
+        setTimeout(() => {
+          setShownComponent("question");
+        }, 200);
       }
     }
   }, [game.gamePhase]);

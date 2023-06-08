@@ -24,13 +24,11 @@ import { pointsForLast } from "./FunctionsGame";
 export default function GamePlayer() {
   const location = useLocation();
   const { state } = location;
-
   const [game, setGame] = useState<Game>(state.game);
   const [shownComponent, setShownComponent] = useState<string | null>(null);
   const [points, setPoints] = useState<number>(0);
   const [player, setPlayer] = useState<Player>();
   const [lastQuestionPoints, setLastQuestionPoints] = useState(0);
-  const [activeEffects, setActiveEffects] = useState<string[]>([]);
   const [showPage, setShowPage] = useState(false);
   const [reconnectionTime, setReconnectionTime] = useState(() => {
     const storedTime = localStorage.getItem("time");
@@ -159,7 +157,7 @@ export default function GamePlayer() {
         <Waiting
             message="Waiting for host to reconnect"
             time={reconnectionTime}
-            setTime={setReconnectionTime} possibleLeave={true}        />
+            setTime={setReconnectionTime} possibleLeave={true}       />
       )}
     </>
   );

@@ -8,6 +8,7 @@ export default function AbilityCard({
   gameState,
   player,
   setComponentState,
+  setLastUsedAbility
 }: AbilityCardProps) {
   const cardRef = useRef(null);
   const inputNeeded = ability.name == "EraseEnemyPoints" ? true : false;
@@ -57,6 +58,7 @@ export default function AbilityCard({
             } else if (enemyName) {
               ability.onChoose(player.name, enemyName);
             }
+            setLastUsedAbility(`You have used ${ability.name}!`)
             setComponentState("waitingForOthers");
           }}
         >
@@ -72,5 +74,6 @@ interface AbilityCardProps {
   gameState: Game;
   player: Player;
   playerPoints: number;
-  setComponentState: any;
+  setComponentState: (state:string) => void;
+  setLastUsedAbility:(ability:string) => void;
 }

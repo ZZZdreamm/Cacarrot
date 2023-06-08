@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import MyModal from "../Utilities/Modal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ListOfTemplates from "../GameTemplate/ListOfTemplates";
 import { GameTemplate } from "./game.models";
 import { getUserTemplates } from "../FirebaseDatabase/TemplatesInDB";
@@ -73,11 +73,12 @@ export default function CreateGame() {
                 template: choosenTemplate,
                 gamecode: generateCode(),
               };
-              navigate("/game-code", { state: gameProps });
-              localStorage.setItem(
-                "gameTemplate",
-                JSON.stringify(choosenTemplate)
-              );
+                navigate(`/game-code/${gameProps.gamecode}`, { state: gameProps });
+                localStorage.setItem(
+                  "gameTemplate",
+                  JSON.stringify(choosenTemplate)
+                );
+
             }}
           />
         </article>

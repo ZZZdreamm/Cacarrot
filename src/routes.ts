@@ -13,20 +13,24 @@ import Register from "./auth/Register";
 const routes = [
   { path: "/login", component: Login },
   { path: "/register", component: Register },
-  { path: "/waiting-room", component: WaitingRoom },
+
+  { path: "create", component: CreateGame },
+  { path: "create-template", component: CreateTemplate },
+  { path: "/edit-template", component: EditTemplate },
+  
+  { path: "/waiting-room/:code", component: WaitingRoom },
+  { path: "/input-name/:code", component: InputName },
+  { path: "/game-code/:code", component: Gamecode },
+  { path: "/game-host/:code", component: GameHost },
   { path: "/game-player/:code", component: GamePlayer },
-  { path: "/input-name", component: InputName },
 
   { path: "/", component: LandingPage },
   { path: "*", component: LandingPage },
 ];
 
 export const guardedRoutes = [
-  { path: "create", component: CreateGame },
-  { path: "create-template", component: CreateTemplate },
-  { path: "/edit-template", component: EditTemplate },
-  { path: "/game-code", component: Gamecode },
-  { path: "/game-host/:code", component: GameHost },
+
+
 ];
 
 export default routes;

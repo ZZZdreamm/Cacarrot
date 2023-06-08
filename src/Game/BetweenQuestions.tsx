@@ -7,13 +7,15 @@ import Waiting from "../Utilities/Waiting";
 export default function BetweenQuestions({
   gameState,
   lastQuestionPoints,
-  player
+  player,
 }: BetweenQuestionsProps) {
   const [componentState, setComponentState] = useState("showingAnswer");
+  const [lastUsedAbility, setLastUsedAbility] = useState('')
 
 
 
   useEffect(() => {
+    setLastUsedAbility('')
     if (
       gameState.gamePhase % 2 == 0 &&
       gameState.gamePhase < gameState.gameTemplate.allQuestions.length * 2 - 1
@@ -47,10 +49,10 @@ export default function BetweenQuestions({
         <ChooseAbility
           gameState={gameState}
           player={player}
-          setComponentState={setComponentState}     />
+          setComponentState={setComponentState} setLastUsedAbility={setLastUsedAbility}/>
       )}
       {componentState == "waitingForOthers" && (
-        <Waiting message="Wait for other players" setTime={() => { } } possibleLeave={false} />
+        <Waiting message="Wait for other players" setTime={() => { } } possibleLeave={false} eventMessage={lastUsedAbility}/>
       )}
     </>
   );

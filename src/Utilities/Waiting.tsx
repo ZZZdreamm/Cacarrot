@@ -8,9 +8,10 @@ export default function Waiting({
   message,
   time,
   setTime,
-  possibleLeave
+  possibleLeave,
+  eventMessage
 }: WaitingProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [waiting, setWaiting] = useState(true);
   useEffect(() => {
     localStorage.setItem("time", `${time!}`);
@@ -22,19 +23,32 @@ export default function Waiting({
     <>
       {waiting ? (
         <>
-          <div className="loader">
-            <span className="loader__element"></span>
-            <span className="loader__element"></span>
-            <span className="loader__element"></span>
+          <div>
+            <div className="loader">
+              <span className="loader__element"></span>
+              <span className="loader__element"></span>
+              <span className="loader__element"></span>
+            </div>
+            <h1>{message}</h1>
+            {eventMessage && <h2 className="event-message">
+              {eventMessage}
+            </h2>}
+            <Counter
+              time={time!}
+              setTime={setTime}
+              bonusStyling={{ display: "none" }}
+            />
           </div>
-          <h1>{message}</h1>
-          <Counter
-            time={time!}
-            setTime={setTime}
-            bonusStyling={{ display: "none" }}
-          />
 
-          {possibleLeave && <button onClick={() => {navigate('/')}}>Leave game</button>}
+          {possibleLeave && (
+            <button
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Leave game
+            </button>
+          )}
         </>
       ) : (
         <GameAbandoned />
@@ -47,5 +61,6 @@ interface WaitingProps {
   message: string;
   time?: number;
   setTime: (time: any) => void;
-  possibleLeave:boolean;
+  possibleLeave: boolean;
+  eventMessage?:string
 }

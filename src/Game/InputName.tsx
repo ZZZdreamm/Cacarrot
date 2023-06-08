@@ -18,7 +18,7 @@ export default function InputName(){
         socket.emit('gamecode', state)
         socket.on(`joined/${state}/${socket.id}`, (data)=> {
             const dataState = {game:data.game, username:data.playerName, playerId:data.playerId}
-            navigate('/waiting-room', {state: dataState})
+            navigate(`/waiting-room/${state}`, {state: dataState})
         })
     },[])
 

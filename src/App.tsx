@@ -15,6 +15,7 @@ import { io } from "socket.io-client";
 import { serverURL } from "./apiPaths";
 import SnowingEffect from "./Utilities/SnowingEffect";
 import { Game } from "./Game/game.models";
+import Waiting from "./Utilities/Waiting";
 
 export const socket = io(serverURL);
 
@@ -55,7 +56,7 @@ function App() {
                     ))}
 
                     {gotClaims &&
-                      guardedRoutes.map((route) => (
+                      guardedRoutes.map((route:any) => (
                         <Route
                           key={route.path}
                           element={

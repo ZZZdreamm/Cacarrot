@@ -20,6 +20,7 @@ export function getClaims(): claim[]{
         response.push({name:property,value:dataToken[property]});
     }
 
+
     return response;
 
 }

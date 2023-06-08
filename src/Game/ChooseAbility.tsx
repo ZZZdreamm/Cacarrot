@@ -6,6 +6,7 @@ export default function ChooseAbility({
   gameState,
   player,
   setComponentState,
+  setLastUsedAbility
 }: ChooseAbilityProps) {
   return (
     <>
@@ -18,6 +19,7 @@ export default function ChooseAbility({
             gameState={gameState}
             player={player}
             setComponentState={setComponentState}
+            setLastUsedAbility={setLastUsedAbility}
             />
         ))}
       </div>
@@ -34,5 +36,6 @@ export default function ChooseAbility({
 interface ChooseAbilityProps {
   gameState: Game;
   player: Player;
-  setComponentState: any;
+  setComponentState: (state:string) => void;
+  setLastUsedAbility:(ability:string) => void;
 }

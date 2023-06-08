@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Authorized from "../auth/Authorized";
 import MyInput from "../Utilities/MyInput";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { checkIfGamecodeIsInDB } from "../FirebaseDatabase/GamesInDB";
 import { ReadyImagesURL } from "../appUrls";
 import SnowingEffect from "../Utilities/SnowingEffect";
@@ -12,6 +12,7 @@ export default function LandingPage() {
   const [goodCode, setGoodCode] = useState(false);
   const [wrongCode, setWrongCode] = useState("");
   const [windowSize, setWindowSize] = useState(window.innerWidth);
+
 
   useEffect(() => {
     function handleResize() {
@@ -31,7 +32,7 @@ export default function LandingPage() {
   }
   useEffect(() => {
     if (goodCode) {
-      navigate("/input-name", { state: gamecode });
+      navigate(`/input-name/${gamecode}`, { state: gamecode });
     }
   }, [goodCode]);
   return (
@@ -48,15 +49,28 @@ export default function LandingPage() {
                     navigate("create");
                   }}
                 >
-                  Create your own Cacarrot
+                  Start your own Cacarrot
                 </button>
               }
               notAuthorized={
                 <>
+                <div>
+                <button
+                  className="my-button"
+                  onClick={() => {
+                    localStorage.setItem('id', "examples")
+                    navigate("create");
+                  }}
+                >
+                  Start with example templates
+                </button>
+                </div>
+                <div>
                   <button onClick={() => navigate("/login")}>Login</button>
                   <button onClick={() => navigate("/register")}>
                     Register
                   </button>
+                  </div>
                 </>
               }
             />
