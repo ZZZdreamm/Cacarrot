@@ -13,6 +13,7 @@ Tools used in project
 - FetchAPI
 - async function
 - media queries
+  
 About project:
 - Logging system using JWTToken Authentication for verification.
 - As logged user you can create, edit and save Game Templates for later usage of them.
