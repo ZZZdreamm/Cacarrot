@@ -1,28 +1,42 @@
+<h1>Cacarrot</h1>
 It is kahoot like game.
 
+<h2>Online version</h2>
 Link to website: https://zzzdreamm.github.io/Cacarrot/
 
-Tools used in project
-- ReactJS
-- SCSS
-- Typescript
-- Node.js
-- Socket.IO
-- Firebase
-- JWTToken
-- FetchAPI
-- async function
-- media queries
+<h2>Getting started</h2>
+
+```bash
+# install dependencies
+npm install
+
+# run the project
+npm run start
+```
+
+<h2>Technologies</h2>
+<ul>
+<li>ReactJS</li>
+<li>SCSS</li>
+<li>Typescript</li>
+<li>Node.js</li>
+<li>Socket.IO</li>
+<li>Firebase</li>
+<li>axios</li>
+<li>git, npm</li>
+<li>jsonwebtoken</li>
+</ul>
   
-About project:
-- Logging system using JWTToken Authentication for verification.
-- As logged user you can create, edit and save Game Templates for later usage of them.
-After choosing one of created templates, there is generated random Gamecode which
-needs to be given to players for them to join the game. After players have joined host
-of game starts the game.
-- All game calculations and timer is counted on serverFside and stored in Firebase
-Realtime Database to maintain game consistency even if user loses connection.
-- Also to maintain game after refreshing page or losing connection all data that is
-needed is saved in local and cache storages.
+<h2>Features</h2>
+<ul>
+<li> login with email and password</li>
+<li>storing gamestate in database</li>
+<li>persistent gamestate with use of caches after refresh of page</li>
+<li>real time user updates</li>
+<li>game data calculated on server and sent back to users through whole game</li>
+<li>erasure of player if he leaves before start</li>
+<li>possibility to return to game after disconnect</li>
+<li>extra functionality to use points to attack other players</li>
+</ul>
 
 
