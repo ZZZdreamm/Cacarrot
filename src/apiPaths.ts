@@ -1,5 +1,4 @@
-// export let serverURL = "https://cacarrot-server.herokuapp.com/";
-export let serverURL = "http://localhost:5000/";
+export let serverURL = "https://cacarrot-server.herokuapp.com/";
 
 export const localServerURL = "http://localhost:5000/";
 
