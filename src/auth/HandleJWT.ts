@@ -3,7 +3,7 @@ import { claim } from "./auth.models";
 
 const tokenKey = 'token';
 export function saveToken(token:string){
-    console.log(token)
+    if(!token) return
     localStorage.setItem(tokenKey, token);
 }
 

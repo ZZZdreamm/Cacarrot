@@ -5,10 +5,7 @@ import { Question } from "../GameTemplate/questions.models";
 import ShownQuestion from "./ShownQuestion";
 import Statistics from "./Statistics";
 import Winners from "./Winners";
-import {
-  getGameData,
-  fetchData,
-} from "../FirebaseDatabase/GamesInDB";
+import { getGameData, fetchData } from "../FirebaseDatabase/GamesInDB";
 import UnloadPrompt from "../Utilities/UnloadPrompt";
 import { getSortedPlayers, getWinners } from "./FunctionsGame";
 import { HostConnection } from "../FirebaseDatabase/ConnectedToDB";
@@ -27,15 +24,14 @@ export default function GameHost() {
   );
   const [players, setPlayers] = useState(game.players);
   const [showPage, setShowPage] = useState(false);
-  const [showEmpty, setShowEmpty] = useState(true)
-
+  const [showEmpty, setShowEmpty] = useState(true);
 
   useEffect(() => {
     socket.emit("host-reconnect", { code: gamecode, hostId: socket.id });
-    HostConnection(gamecode)
+    HostConnection(gamecode);
     getGameData(gamecode, setGame);
     setTimeout(() => {
-      setShowEmpty(false)
+      setShowEmpty(false);
     }, 1000);
   }, []);
 
@@ -43,11 +39,21 @@ export default function GameHost() {
     if (gamecode) {
       const getData = async () => {
         await fetchData(gamecode, game.time, setGame, "time");
-        await fetchData(gamecode, game.hostConnection, setGame, "hostConnection");
+        await fetchData(
+          gamecode,
+          game.hostConnection,
+          setGame,
+          "hostConnection"
+        );
         await fetchData(gamecode, game.winners, setGame, "winners");
         await fetchData(gamecode, game.gamePhase, setGame, "gamePhase");
-        await fetchData(gamecode, game.currentQuestion, setGame, "currentQuestion");
-        setShowPage(true)
+        await fetchData(
+          gamecode,
+          game.currentQuestion,
+          setGame,
+          "currentQuestion"
+        );
+        setShowPage(true);
       };
       getData();
     }
@@ -110,8 +116,15 @@ export default function GameHost() {
         </div>
       ) : (
         <>
-        {showEmpty ? <></> : <Waiting message="Waiting for connection" setTime={() => { } } possibleLeave={false}/>}
-
+          {showEmpty ? (
+            <></>
+          ) : (
+            <Waiting
+              message="Waiting for connection"
+              setTime={() => {}}
+              possibleLeave={false}
+            />
+          )}
         </>
       )}
     </>

@@ -1,4 +1,3 @@
-import { Console } from "console";
 import { GameTemplate } from "../Game/game.models";
 import { usersRef } from "./FirebaseConfig";
 
